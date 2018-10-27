@@ -1,0 +1,10 @@
+{
+  "presets": ["env", "react", "stage-1", "flow"],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-class-properties",
+    "transform-flow-strip-types",
+    "transform-runtime",
+    "babel-plugin-styled-components"
+  ]
+}

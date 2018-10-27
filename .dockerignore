@@ -1,0 +1,12 @@
+Dockerfile
+.dockerignore
+.gitignore
+.env
+config.json
+README.md
+docker_push.sh
+docker_run.sh
+
+build
+node_modules
+npm-debug.log
