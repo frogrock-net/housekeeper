@@ -5,7 +5,11 @@
     "dependencies": {
         "axios": "^0.18.0",
         "babel-runtime": "^6.26.0",
+        "body-parser": "^1.18.3",
         "express": "^4.16.4",
+        "graphql": "^14.0.2",
+        "graphql-server-express": "^1.4.0",
+        "graphql-tools": "^4.0.3",
         "lodash": "^4.17.11",
         "moment": "^2.22.2",
         "mongoose": "^5.3.7",
