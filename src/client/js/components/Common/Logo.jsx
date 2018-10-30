@@ -23,6 +23,7 @@ Logo.defaultProps = {
 const LogoContainer = styled.div`
     display: flex;
     height: ${props => props.size}px;
+    padding-right: ${props => props.size / 4}px;
 `;
 
 const StyledIcon = styled(Housekeeper)`
