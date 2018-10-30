@@ -53,3 +53,13 @@ app.use('*', function(req, resp) {
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 });
+
+let mongoose = require('mongoose');
+const dbUrl = 'mongodb://127.0.0.1:27017/housekeeper';
+mongoose.connect(
+    dbUrl,
+    { useNewUrlParser: true }
+);
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
