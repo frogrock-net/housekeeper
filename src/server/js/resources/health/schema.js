@@ -14,15 +14,11 @@ const typeDefs = `
 
 const resolvers = {
     Query: {
-        healthChecks: () => {
-            return HealthModel.find()
-                .exec()
-                .then(healthChecks => {
-                    return healthChecks;
-                });
+        healthChecks: (root, args, context, info) => {
+            return HealthModel.find({});
         },
-        health: id => {
-            return HealthModel.findOne();
+        health: (root, args, context, info) => {
+            return HealthModel.findById(args.id);
         },
     },
 };
