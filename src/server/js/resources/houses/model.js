@@ -14,7 +14,9 @@ const HouseSchema = new mongoose.Schema({
             capacity: { type: Number, min: 1, required: true },
         },
     ],
-    // administrators: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    administrators: [
+        { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    ],
 });
 
 export default mongoose.model('HouseModel', HouseSchema);
