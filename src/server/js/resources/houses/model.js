@@ -15,15 +15,15 @@ const HouseSchema = new mongoose.Schema({
             },
         },
     },
+    administrators: [
+        { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    ],
     name: { type: String, required: true },
     rooms: [
         {
             description: { type: String, required: true },
             capacity: { type: Number, min: 1, required: true },
         },
-    ],
-    administrators: [
-        { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     ],
 });
 
