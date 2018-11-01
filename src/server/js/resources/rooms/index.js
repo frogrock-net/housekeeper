@@ -10,12 +10,14 @@ const router = new express.Router();
  * Returns a list of houses.
  */
 router.get('/', (req, res, next) => {
-    RoomModel.find({}, (err, rooms) => {
-        if (err) {
-            return next(err);
-        }
-        res.json(rooms);
-    });
+    RoomModel.find()
+        .populate('house')
+        .exec((err, rooms) => {
+            if (err) {
+                return next(err);
+            }
+            res.json(rooms);
+        });
 });
 
 export default router;
