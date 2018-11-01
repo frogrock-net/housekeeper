@@ -1,6 +1,6 @@
 import express from 'express';
 
-import HealthModel from './health';
+import HealthModel from './model';
 
 const router = new express.Router();
 
