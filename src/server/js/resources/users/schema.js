@@ -1,5 +1,3 @@
-import UserModel from './model';
-
 const typeDefs = `
     type User {
         id: ID!

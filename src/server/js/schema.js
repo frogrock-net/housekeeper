@@ -3,11 +3,14 @@ import { makeExecutableSchema } from 'graphql-tools';
 
 import HealthModel from './resources/health/model';
 import { typeDefs as Health } from './resources/health/schema';
+import HouseModel from './resources/houses/model';
+import { typeDefs as House } from './resources/houses/schema';
 import UserModel from './resources/users/model';
 import { typeDefs as User } from './resources/users/schema';
 
 const queryTypeDefs = `
     type Query {
+        allHouses: [House],
         allUsers: [User],
         userByEmail(email: String): User,
         healthCheck: [Health]
@@ -16,6 +19,8 @@ const queryTypeDefs = `
 
 const queryResolvers = {
     Query: {
+        allHouses: (root, args, context, info) =>
+            HouseModel.find().populate('administrators'),
         allUsers: (root, args, context, info) => UserModel.find(),
         userByEmail: (root, args, context, info) =>
             UserModel.findOne({ email: args.email }),
@@ -24,7 +29,7 @@ const queryResolvers = {
 };
 
 const schema = makeExecutableSchema({
-    typeDefs: [queryTypeDefs, User, Health],
+    typeDefs: [queryTypeDefs, House, User, Health],
     resolvers: merge(queryResolvers),
 });
 
