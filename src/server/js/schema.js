@@ -18,9 +18,11 @@ const queryTypeDefs = `
 const queryResolvers = {
     Query: {
         allHouses: (root, args, context, info) =>
-            HouseModel.find().populate('administrators'), // TODO: remove populate?
+            HouseModel.find().populate('administrators'),
         housesByAdministrator: (root, args, context, info) =>
-            HouseModel.find({ administrators: args.administratorId }),
+            HouseModel.find({ administrators: args.administratorId }).populate(
+                'administrators'
+            ),
         allUsers: (root, args, context, info) => UserModel.find(),
         userByEmail: (root, args, context, info) =>
             UserModel.findOne({ email: args.email }),
