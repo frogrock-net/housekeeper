@@ -3,7 +3,7 @@ const typeDefs = `
         id: ID!
         capacity: Int
         description: String
-        house: ID!
+        house: House
     }
 `;
 
