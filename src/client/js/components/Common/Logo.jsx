@@ -10,7 +10,7 @@ type Props = {
 
 const Logo = (props: Props) => (
     <LogoContainer {...props}>
-        <StyledIcon {...props} />
+        <Housekeeper {...props} />
         <LogoText {...props}>Housekeeper</LogoText>
     </LogoContainer>
 );
@@ -24,11 +24,6 @@ const LogoContainer = styled.div`
     display: flex;
     height: ${props => props.size}px;
     padding-right: ${props => props.size / 4}px;
-`;
-
-const StyledIcon = styled(Housekeeper)`
-    height: ${props => props.size}px;
-    width: ${props => props.size}px;
 `;
 
 const LogoText = styled.div`

@@ -6,6 +6,7 @@ type Props = {
     className?: string,
     defaultValues?: { [string]: any },
     children?: React.Node,
+    onSubmit: State => void,
 };
 
 /**
@@ -33,20 +34,36 @@ export default class Form extends React.Component<Props, State> {
         this.setState({ [field]: value });
     };
 
-    onSubmit = () => {};
+    onSubmit = (e: Event) => {
+        e.preventDefault();
+        this.props.onSubmit(this.state);
+    };
 
     render() {
         return (
             <FormContainer className={this.props.className}>
-                {React.Children.map(this.props.children, child => {
-                    return React.cloneElement(child, {
-                        onUpdate: this.onUpdate.bind(this),
-                        value: this.state[child.props.fieldName],
-                    });
-                })}
+                <form onSubmit={this.onSubmit}>
+                    {React.Children.map(this.props.children, child => {
+                        return React.cloneElement(child, {
+                            onUpdate: this.onUpdate.bind(this),
+                            value: this.state[child.props.fieldName],
+                        });
+                    })}
+                </form>
             </FormContainer>
         );
     }
 }
 
-const FormContainer = styled.div``;
+const FormContainer = styled.div`
+    background-color: #fff;
+    padding: 15px 35px 25px 35px;
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-top: 10px;
+    }
+`;
