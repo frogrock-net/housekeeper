@@ -1,3 +1,5 @@
+import RoomModel from './model';
+
 const typeDefs = `
     type Room {
         id: ID!
@@ -5,6 +7,22 @@ const typeDefs = `
         description: String
         house: House
     }
+
+    extend type Query {
+        roomsByHouse(houseId: ID!): [Room],
+    }
 `;
 
-export { typeDefs };
+const resolvers = {
+    Query: {
+        roomsByHouse: (root, args, context, info) =>
+            RoomModel.find({ house: args.houseId }).populate({
+                path: 'house',
+                populate: {
+                    path: 'administrators',
+                },
+            }),
+    },
+};
+
+export { typeDefs, resolvers };

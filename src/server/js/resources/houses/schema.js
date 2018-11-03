@@ -1,3 +1,5 @@
+import HouseModel from './model';
+
 const typeDefs = `
     type Address {
         street: String
@@ -12,6 +14,22 @@ const typeDefs = `
         administrators: [User]
         name: String
     }
+
+    extend type Query {
+        allHouses: [House],
+        housesByAdministrator(administratorId: ID!): [House],
+    }
 `;
 
-export { typeDefs };
+const resolvers = {
+    Query: {
+        allHouses: (root, args, context, info) =>
+            HouseModel.find().populate('administrators'),
+        housesByAdministrator: (root, args, context, info) =>
+            HouseModel.find({ administrators: args.administratorId }).populate(
+                'administrators'
+            ),
+    },
+};
+
+export { typeDefs, resolvers };
