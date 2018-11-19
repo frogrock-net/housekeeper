@@ -2,11 +2,7 @@ import mongoose from 'mongoose';
 import { values } from 'lodash';
 import moment from 'moment';
 
-const BOOKING_STATUSES = {
-    APPROVED: 'APPROVED',
-    DENIED: 'DENIED',
-    PENDING: 'PENDING',
-};
+import { BOOKING_STATUSES } from '../../../../common/constants';
 
 const BookingSchema = new mongoose.Schema({
     booker: {
