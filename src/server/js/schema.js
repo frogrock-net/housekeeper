@@ -9,6 +9,8 @@ import * as userSchema from './resources/users/schema';
 // This base Query type is meant to be extended in each model schema.
 // An empty Query is not allowed, need to use a fake empty field.
 const queryTypeDefs = `
+    scalar DateTime
+
     type Query {
         _empty: String
     }

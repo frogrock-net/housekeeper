@@ -12,9 +12,9 @@ const typeDefs = `
     type Booking {
         id: ID!
         booker: User
-        endDate: String
+        endDate: DateTime
         room: Room
-        startDate: String
+        startDate: DateTime
         status: String
     }
 
