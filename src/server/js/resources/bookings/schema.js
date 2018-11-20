@@ -3,6 +3,12 @@ import BookingModel from './model';
 import { BOOKING_STATUSES } from '../../../../common/constants';
 
 const typeDefs = `
+    enum BookingStatus {
+        ${BOOKING_STATUSES.APPROVED}
+        ${BOOKING_STATUSES.DENIED}
+        ${BOOKING_STATUSES.PENDING}
+    }
+
     type Booking {
         id: ID!
         booker: User
@@ -23,7 +29,5 @@ const resolvers = {
             BookingModel.find({ booker: args.userId }).populate('booker'),
     },
 };
-
-// TODO: status should be one of the three statuses only
 
 export { typeDefs, resolvers };
