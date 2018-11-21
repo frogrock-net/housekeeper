@@ -9,10 +9,10 @@ const path = require('path');
 const { readdirSync, statSync } = require('fs');
 const { join } = require('path');
 
+import passport from './passport';
 import schema from './schema';
 
-const dirs = p =>
-    readdirSync(p).filter(f => statSync(join(p, f)).isDirectory());
+const dirs = p => readdirSync(p).filter(f => statSync(join(p, f)).isDirectory());
 
 const app = express();
 
@@ -65,6 +65,8 @@ app.use(
     })
 );
 
+app.use(passport.initialize());
+
 app.use('*', function(req, resp) {
     resp.sendFile(path.resolve(`${__dirname}/../../../build/index.html`));
 });
@@ -77,7 +79,12 @@ let mongoose = require('mongoose');
 const dbUrl = 'mongodb://127.0.0.1:27017/housekeeper';
 mongoose.connect(
     dbUrl,
-    { useNewUrlParser: true }
+    // see dep warnings: https://mongoosejs.com/docs/deprecations.html
+    {
+        useCreateIndex: true,
+        useFindAndModify: false,
+        useNewUrlParser: true,
+    }
 );
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
