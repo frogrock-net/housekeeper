@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import validator from 'validator';
 
@@ -30,6 +31,15 @@ UserSchema.methods.setPassword = function(password) {
 UserSchema.methods.validatePassword = function(password) {
     const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
     return this.hash === hash;
+};
+
+UserSchema.methods.generateToken = function() {
+    return jwt.sign(
+        {
+            email: this.email,
+        },
+        process.env.JWT_SECRET
+    );
 };
 
 export default mongoose.model('UserModel', UserSchema);
