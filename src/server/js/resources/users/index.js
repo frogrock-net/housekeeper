@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from '../../passport';
 
 import UserModel from './model';
 
@@ -12,6 +13,22 @@ router.get('/', (req, res, next) => {
 
         res.send(users);
     });
+});
+
+router.post('/login', (req, res) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            res.status(404).json(err);
+            return;
+        }
+
+        if (user) {
+            const token = user.generateToken();
+            res.status(200).json({ token });
+        } else {
+            res.status(404).json(info);
+        }
+    })(req, res);
 });
 
 router.post('/signup', (req, res, next) => {

@@ -5,7 +5,7 @@ import UserModel from './resources/users/model';
 
 passport.use(
     new LocalStrategy({ usernameField: 'email' }, (username, password, next) => {
-        User.findOne({ email: username }, (err, user) => {
+        UserModel.findOne({ email: username }, (err, user) => {
             if (err) {
                 return next(err);
             }
