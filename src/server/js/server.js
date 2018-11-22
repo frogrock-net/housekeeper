@@ -6,6 +6,7 @@ import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import path from 'path';
 
 import passport from './passport';
+import routes from './routes';
 import schema from './schema';
 
 const PORT = process.env.PORT || '8080';
@@ -42,13 +43,15 @@ app.use((err, req, res, next) => {
 
 console.log(`Starting housekeeper server!`);
 
-app.use(bodyParser.json());
-
 dirs(`${__dirname}/resources`).forEach(dir => {
     const api = require(`./resources/${dir}`).default;
     console.log(`\tLoading API resource: ${dir}`);
     app.use(`/api/${dir}`, api);
 });
+
+app.use(bodyParser.json());
+app.use(passport.initialize());
+app.use('/', routes);
 
 app.use(
     '/graphql',
@@ -63,8 +66,6 @@ app.use(
         endpointURL: '/graphql',
     })
 );
-
-app.use(passport.initialize());
 
 app.use('*', function(req, resp) {
     resp.sendFile(path.resolve(`${__dirname}/../../../build/index.html`));
