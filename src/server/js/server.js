@@ -1,18 +1,16 @@
 require('babel-core/register');
-import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import bodyParser from 'body-parser';
-
-const PORT = process.env.PORT || '8080';
-
-const express = require('express');
-const path = require('path');
-const { readdirSync, statSync } = require('fs');
-const { join } = require('path');
+import express from 'express';
+import { readdirSync, statSync } from 'fs';
+import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
+import path from 'path';
 
 import passport from './passport';
 import schema from './schema';
 
-const dirs = p => readdirSync(p).filter(f => statSync(join(p, f)).isDirectory());
+const PORT = process.env.PORT || '8080';
+
+const dirs = p => readdirSync(p).filter(f => statSync(path.join(p, f)).isDirectory());
 
 const app = express();
 
@@ -44,6 +42,8 @@ app.use((err, req, res, next) => {
 
 console.log(`Starting housekeeper server!`);
 
+app.use(bodyParser.json());
+
 dirs(`${__dirname}/resources`).forEach(dir => {
     const api = require(`./resources/${dir}`).default;
     console.log(`\tLoading API resource: ${dir}`);
@@ -52,7 +52,6 @@ dirs(`${__dirname}/resources`).forEach(dir => {
 
 app.use(
     '/graphql',
-    bodyParser.json(),
     graphqlExpress({
         schema,
     })
