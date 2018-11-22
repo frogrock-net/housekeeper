@@ -3,6 +3,7 @@ import expressJwt from 'express-jwt';
 
 import UserModel from './model';
 import passport from '../../passport';
+import HouseModel from '../houses/model';
 
 const router = new express.Router();
 
@@ -12,13 +13,12 @@ const auth = expressJwt({
 });
 
 router.get('/', auth, (req, res, next) => {
-    console.log(req.payload);
-    return UserModel.find({}, (err, users) => {
+    return UserModel.findById(req.payload.id, (err, user) => {
         if (err) {
             return next(err);
         }
 
-        res.send(users);
+        res.send(user);
     });
 });
 
