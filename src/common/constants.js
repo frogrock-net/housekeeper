@@ -1,0 +1,5 @@
+export const BOOKING_STATUSES = {
+    APPROVED: 'APPROVED',
+    DENIED: 'DENIED',
+    PENDING: 'PENDING',
+};
