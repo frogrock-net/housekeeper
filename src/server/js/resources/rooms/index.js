@@ -5,9 +5,9 @@ import RoomModel from './model';
 const router = new express.Router();
 
 /**
- * Endpoint for houses.
+ * Endpoint for rooms.
  *
- * Returns a list of houses.
+ * Returns a list of rooms.
  */
 router.get('/', (req, res, next) => {
     RoomModel.find()
