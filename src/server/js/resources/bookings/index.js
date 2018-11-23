@@ -6,9 +6,9 @@ import BookingModel from './model';
 const router = new express.Router();
 
 /**
- * Endpoint for houses.
+ * Endpoint for bookings.
  *
- * Returns a list of houses.
+ * Returns a list of bookings.
  */
 router.get('/', (req, res, next) => {
     BookingModel.find({})
