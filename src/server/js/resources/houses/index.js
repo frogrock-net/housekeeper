@@ -1,6 +1,6 @@
 import express from 'express';
 
-import House from './model';
+import HouseModel from './model';
 
 const router = new express.Router();
 
@@ -10,7 +10,7 @@ const router = new express.Router();
  * Returns a list of houses.
  */
 router.get('/', (req, res, next) => {
-    House.find({}, (err, houses) => {
+    HouseModel.find({}, (err, houses) => {
         if (err) {
             return next(err);
         }

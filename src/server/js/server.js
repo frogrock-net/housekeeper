@@ -1,20 +1,18 @@
 require('babel-core/register');
 require('dotenv').config();
 
-import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import bodyParser from 'body-parser';
-
-const PORT = process.env.PORT || '8080';
-
-const express = require('express');
-const path = require('path');
-const { readdirSync, statSync } = require('fs');
-const { join } = require('path');
+import express from 'express';
+import expressJwt from 'express-jwt';
+import { readdirSync, statSync } from 'fs';
+import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
+import path from 'path';
 
 import schema from './schema';
 
-const dirs = p =>
-    readdirSync(p).filter(f => statSync(join(p, f)).isDirectory());
+const PORT = process.env.PORT || '8080';
+
+const dirs = p => readdirSync(p).filter(f => statSync(path.join(p, f)).isDirectory());
 
 const app = express();
 
@@ -52,12 +50,22 @@ dirs(`${__dirname}/resources`).forEach(dir => {
     app.use(`/api/${dir}`, api);
 });
 
+app.use(bodyParser.json());
+
+const auth = expressJwt({
+    credentialsRequired: false,
+    secret: process.env.JWT_SECRET,
+    userProperty: 'jwt',
+});
+
+app.use(auth);
+
 app.use(
     '/graphql',
-    bodyParser.json(),
-    graphqlExpress({
+    graphqlExpress(req => ({
         schema,
-    })
+        context: { jwt: req.jwt },
+    }))
 );
 
 app.use(
@@ -82,9 +90,7 @@ let dbUrl;
 if (process.env.MONGODB_URL) {
     // if we've received mongodb credentials from the environment variables, use them.
     console.log(`Connecting to datastore: ${process.env.MONGODB_URL}`);
-    dbUrl = `mongodb://${process.env.MONGODB_ACCOUNT}:${
-        process.env.MONGODB_PASSWORD
-    }@${process.env.MONGODB_URL}`;
+    dbUrl = `mongodb://${process.env.MONGODB_ACCOUNT}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}`;
 } else {
     // if not, try and connect to a local database...
     console.log(`Connecting to local MongoDB.`);
@@ -93,7 +99,12 @@ if (process.env.MONGODB_URL) {
 
 mongoose.connect(
     dbUrl,
-    { useNewUrlParser: true }
+    // see dep warnings: https://mongoosejs.com/docs/deprecations.html
+    {
+        useCreateIndex: true,
+        useFindAndModify: false,
+        useNewUrlParser: true,
+    }
 );
 
 mongoose.Promise = global.Promise;
