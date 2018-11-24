@@ -1,4 +1,6 @@
 require('babel-core/register');
+require('dotenv').config();
+
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import bodyParser from 'body-parser';
 
@@ -74,7 +76,21 @@ app.listen(PORT, () => {
 });
 
 let mongoose = require('mongoose');
-const dbUrl = 'mongodb://127.0.0.1:27017/housekeeper';
+
+// determine which mongodb location we should connect to...
+let dbUrl;
+if (process.env.MONGODB_URL) {
+    // if we've received mongodb credentials from the environment variables, use them.
+    console.log(`Connecting to datastore: ${process.env.MONGODB_URL}`);
+    dbUrl = `mongodb://${process.env.MONGODB_ACCOUNT}:${
+        process.env.MONGODB_PASSWORD
+    }@${process.env.MONGODB_URL}`;
+} else {
+    // if not, try and connect to a local database...
+    console.log(`Connecting to local MongoDB.`);
+    dbUrl = 'mongodb://127.0.0.1:27017/housekeeper';
+}
+
 mongoose.connect(
     dbUrl,
     { useNewUrlParser: true }

@@ -6,6 +6,7 @@
         "axios": "^0.18.0",
         "babel-runtime": "^6.26.0",
         "body-parser": "^1.18.3",
+        "dotenv": "^6.1.0",
         "express": "^4.16.4",
         "graphql": "^14.0.2",
         "graphql-server-express": "^1.4.0",
@@ -64,7 +65,8 @@
         "devserver": "nodemon src/server/js/server.js --exec babel-node --inspect",
         "build": "webpack --config './webpack/webpack.prod.js' && npx babel -d ./build ./src/server/js -s",
         "dev": "concurrently \"npm run devserver\" \"npm run devclient\"",
-        "prod": "npm run build && node build/server.js"
+        "prod": "npm run build && node build/server.js",
+        "start": "npm run build && node build/server.js"
     },
     "author": "alex & friends",
     "husky": {
