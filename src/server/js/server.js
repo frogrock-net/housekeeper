@@ -1,4 +1,6 @@
 require('babel-core/register');
+require('dotenv').config();
+
 import bodyParser from 'body-parser';
 import express from 'express';
 import expressJwt from 'express-jwt';
@@ -14,7 +16,7 @@ const dirs = p => readdirSync(p).filter(f => statSync(path.join(p, f)).isDirecto
 
 const app = express();
 
-app.use(express.static('build'));
+app.use(express.static('build/client/js'));
 
 // error handling is still a WIP.
 app.use((err, req, res, next) => {
@@ -74,7 +76,7 @@ app.use(
 );
 
 app.use('*', function(req, resp) {
-    resp.sendFile(path.resolve(`${__dirname}/../../../build/index.html`));
+    resp.sendFile(path.resolve(`${__dirname}/../../client/js/index.html`));
 });
 
 app.listen(PORT, () => {
@@ -82,7 +84,19 @@ app.listen(PORT, () => {
 });
 
 let mongoose = require('mongoose');
-const dbUrl = 'mongodb://127.0.0.1:27017/housekeeper';
+
+// determine which mongodb location we should connect to...
+let dbUrl;
+if (process.env.MONGODB_URL) {
+    // if we've received mongodb credentials from the environment variables, use them.
+    console.log(`Connecting to datastore: ${process.env.MONGODB_URL}`);
+    dbUrl = `mongodb://${process.env.MONGODB_ACCOUNT}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}`;
+} else {
+    // if not, try and connect to a local database...
+    console.log(`Connecting to local MongoDB.`);
+    dbUrl = 'mongodb://127.0.0.1:27017/housekeeper';
+}
+
 mongoose.connect(
     dbUrl,
     // see dep warnings: https://mongoosejs.com/docs/deprecations.html
@@ -92,6 +106,7 @@ mongoose.connect(
         useNewUrlParser: true,
     }
 );
+
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
