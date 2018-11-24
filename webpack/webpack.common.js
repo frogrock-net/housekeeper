@@ -61,6 +61,7 @@ module.exports = {
             inject: true,
             hash: true,
             template: './src/client/static/template.html',
+            favicon: './src/client/assets/favicon.ico',
         }),
 
         new webpack.ProvidePlugin({
@@ -68,6 +69,5 @@ module.exports = {
         }),
 
         new webpack.NamedModulesPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
     ],
 };
