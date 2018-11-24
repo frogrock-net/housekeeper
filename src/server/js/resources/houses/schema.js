@@ -1,3 +1,5 @@
+import { includes, filter } from 'lodash';
+
 import HouseModel from './model';
 
 const typeDefs = `
@@ -22,6 +24,7 @@ const typeDefs = `
 
     extend type Mutation {
         createHouse(name: String!, street: String, city: String, state: String, zip: String): House,
+        deleteHouse(houseId: ID!): House,
     }
 `;
 
@@ -32,14 +35,25 @@ const resolvers = {
     },
 
     Mutation: {
-        createHouse: (root, args, context, info) => {
+        createHouse: (_, args, context) => {
             const { name, street, city, state, zip } = args;
             const houseData = {
                 name,
                 address: { street, city, state, zip },
             };
 
-            return HouseModel.createHouse(houseData, context.jwt.id);
+            return HouseModel.create(houseData, context.jwt.id);
+        },
+
+        deleteHouse: (_, args, context) => {
+            const house = HouseModel.get(args.houseId).then(house => {
+                if (!filter(house.administrators, admin => admin == context.jwt.id)) {
+                    throw new Error('Only administrators can delete a house.');
+                }
+            });
+
+            const deleted = HouseModel.delete(args.houseId);
+            return deleted;
         },
     },
 };
