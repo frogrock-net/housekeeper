@@ -22,8 +22,8 @@ const typeDefs = `
 const resolvers = {
     Query: {
         allUsers: (root, args, context, info) => UserModel.getAll(),
-        userByEmail: (root, args, context, info) =>
-            UserModel.getUserByEmail(args.email),
+        userByEmail: (root, args, context, info) => UserModel.getUserByEmail(args.email),
+    },
 
     Mutation: {
         createUser: (root, args) => {

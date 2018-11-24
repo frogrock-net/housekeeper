@@ -40,4 +40,14 @@ const BookingSchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model('BookingModel', BookingSchema);
+const BookingModel = mongoose.model('BookingModel', BookingSchema);
+const endpoints = {
+    getAll: () => {
+        return BookingModel.find();
+    },
+    getBookingsByUser: userId => {
+        return BookingModel.find({ booker: userId });
+    },
+};
+
+export default endpoints;

@@ -10,7 +10,7 @@ const router = new express.Router();
  * Returns a list of houses.
  */
 router.get('/', (req, res, next) => {
-    HouseModel.find({}, (err, houses) => {
+    HouseModel.getAll().exec((err, houses) => {
         if (err) {
             return next(err);
         }

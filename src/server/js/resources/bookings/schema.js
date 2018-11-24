@@ -19,13 +19,15 @@ const typeDefs = `
     }
 
     extend type Query {
+        getAllBookings: [Booking],
         bookingsByUser(userId: ID!): [Booking],
     }
 `;
 
 const resolvers = {
     Query: {
-        bookingsByUser: (root, args, context, info) => BookingModel.find({ booker: args.userId }).populate('booker'),
+        getAllBookings: () => BookingModel.getAll(),
+        bookingsByUser: (root, args, context, info) => BookingModel.getBookingsByUser({ booker: args.userId }),
     },
 };
 

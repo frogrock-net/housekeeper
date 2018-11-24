@@ -11,7 +11,7 @@ const router = new express.Router();
  * Returns a list of bookings.
  */
 router.get('/', (req, res, next) => {
-    BookingModel.find({})
+    BookingModel.getAll()
         .populate('room')
         .exec((err, bookings) => {
             if (err) {

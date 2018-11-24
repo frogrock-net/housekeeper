@@ -31,7 +31,7 @@ const endpoints = {
         return HouseModel.find();
     },
     getHousesByAdministrator: adminId => {
-        return HouseModel.find();
+        return HouseModel.find({ administrators: adminId });
     },
 };
 export default endpoints;
