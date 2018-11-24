@@ -23,8 +23,10 @@ const typeDefs = `
     }
 
     extend type Mutation {
+        addAdministratorToHouse(adminId: ID!, houseId: ID!): House,
         createHouse(name: String!, street: String, city: String, state: String, zip: String): House,
         deleteHouse(houseId: ID!): House,
+        updateHouse(houseId: ID!, name: String, street: String, city: String, state: String, zip: String): House,
     }
 `;
 
@@ -46,7 +48,7 @@ const resolvers = {
         },
 
         deleteHouse: (_, args, context) => {
-            const house = HouseModel.get(args.houseId).then(house => {
+            HouseModel.get(args.houseId).then(house => {
                 if (!filter(house.administrators, admin => admin == context.jwt.id)) {
                     throw new Error('Only administrators can delete a house.');
                 }
@@ -54,6 +56,17 @@ const resolvers = {
 
             const deleted = HouseModel.delete(args.houseId);
             return deleted;
+        },
+
+        updateHouse: async (_, args, context) => {
+            const house = await HouseModel.get(args.houseId).then(house => {
+                if (!filter(house.administrators, admin => admin == context.jwt.id)) {
+                    throw new Error('Only administrators can update a house.');
+                }
+                return house;
+            });
+
+            return HouseModel.update(house, args);
         },
     },
 };
