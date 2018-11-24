@@ -5,7 +5,7 @@ const typeDefs = `
         id: ID!
         email: String
         firstName: String
-        lastName: String
+        lastName: String    
     }
 
     extend type Query {
@@ -21,43 +21,13 @@ const typeDefs = `
 
 const resolvers = {
     Query: {
-        allUsers: (root, args, context, info) => {
-            if (!context.jwt) {
-                throw new Error('Not authorized');
-            }
-            return UserModel.find();
-        },
-        userByEmail: (root, args, context, info) => UserModel.findOne({ email: args.email }),
+        allUsers: (root, args, context, info) => UserModel.getAll(),
+        userByEmail: (root, args, context, info) => UserModel.getUserByEmail(args.email),
     },
 
     Mutation: {
-        createUser: (root, args) => {
-            const { email, firstName, lastName, password } = args;
-            const user = UserModel({ email, firstName, lastName });
-            user.setPassword(password);
-
-            user.save(err => {
-                if (err) {
-                    next(err);
-                }
-            });
-
-            return user.generateToken();
-        },
-
-        loginUser: (root, args) => {
-            const token = UserModel.findOne({ email: args.email }, (err, user) => {
-                if (!user) {
-                    throw new Error('User not found!');
-                }
-
-                if (!user.validatePassword(args.password)) {
-                    throw new Error('Invalid password.');
-                }
-            }).then(user => user.generateToken());
-
-            return token;
-        },
+        createUser: (root, args) => UserModel.createUser(root, args),
+        loginUser: (root, args) => UserModel.loginUser(root, args),
     },
 };
 

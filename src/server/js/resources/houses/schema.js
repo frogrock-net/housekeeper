@@ -23,9 +23,9 @@ const typeDefs = `
 
 const resolvers = {
     Query: {
-        allHouses: (root, args, context, info) => HouseModel.find().populate('administrators'),
+        allHouses: (root, args, context, info) => HouseModel.getAll(),
         housesByAdministrator: (root, args, context, info) =>
-            HouseModel.find({ administrators: args.administratorId }).populate('administrators'),
+            HouseModel.getHousesByAdministrator(args.administratorId),
     },
 };
 

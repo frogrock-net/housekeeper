@@ -43,7 +43,6 @@ app.use((err, req, res, next) => {
 });
 
 console.log(`Starting housekeeper server!`);
-
 dirs(`${__dirname}/resources`).forEach(dir => {
     const api = require(`./resources/${dir}`).default;
     console.log(`\tLoading API resource: ${dir}`);
