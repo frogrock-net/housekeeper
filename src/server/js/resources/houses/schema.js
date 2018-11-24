@@ -11,7 +11,7 @@ const typeDefs = `
     type House {
         id: ID!
         address: Address
-        administrators: [User]
+        administrators: [String]
         name: String
     }
 
@@ -19,13 +19,28 @@ const typeDefs = `
         allHouses: [House],
         housesByAdministrator(administratorId: ID!): [House],
     }
+
+    extend type Mutation {
+        createHouse(name: String!, street: String, city: String, state: String, zip: String): House,
+    }
 `;
 
 const resolvers = {
     Query: {
         allHouses: (root, args, context, info) => HouseModel.getAll(),
-        housesByAdministrator: (root, args, context, info) =>
-            HouseModel.getHousesByAdministrator(args.administratorId),
+        housesByAdministrator: (root, args, context, info) => HouseModel.getHousesByAdministrator(args.administratorId),
+    },
+
+    Mutation: {
+        createHouse: (root, args, context, info) => {
+            const { name, street, city, state, zip } = args;
+            const houseData = {
+                name,
+                address: { street, city, state, zip },
+            };
+
+            return HouseModel.createHouse(houseData, context.jwt.id);
+        },
     },
 };
 

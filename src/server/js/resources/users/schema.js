@@ -5,7 +5,7 @@ const typeDefs = `
         id: ID!
         email: String
         firstName: String
-        lastName: String    
+        lastName: String
     }
 
     extend type Query {
@@ -15,7 +15,7 @@ const typeDefs = `
 
     extend type Mutation {
         createUser(email: String, firstName: String, lastName: String, password: String): String
-        loginUser(email: String, password: String): String
+        loginUser(email: String!, password: String!): String
     }
 `;
 

@@ -26,7 +26,19 @@ const HouseSchema = new mongoose.Schema({
 });
 
 const HouseModel = mongoose.model('HouseModel', HouseSchema);
+
 const endpoints = {
+    createHouse: (houseData, creatorId) => {
+        const house = HouseModel(houseData);
+        house.administrators = [creatorId];
+        house.save(err => {
+            if (err) {
+                throw new Error(err);
+            }
+        });
+        return house;
+    },
+
     getAll: () => {
         return HouseModel.find().exec();
     },
