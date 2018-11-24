@@ -2,7 +2,6 @@ import express from 'express';
 import expressJwt from 'express-jwt';
 
 import UserModel from './model';
-import passport from '../../passport';
 import HouseModel from '../houses/model';
 
 const router = new express.Router();

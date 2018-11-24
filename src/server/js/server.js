@@ -49,14 +49,21 @@ dirs(`${__dirname}/resources`).forEach(dir => {
 });
 
 app.use(bodyParser.json());
-app.use(passport.initialize());
-app.use('/', routes);
+
+const auth = expressJwt({
+    credentialsRequired: false,
+    secret: process.env.JWT_SECRET,
+    userProperty: 'jwt',
+});
+
+app.use(auth);
 
 app.use(
     '/graphql',
-    graphqlExpress({
+    graphqlExpress(req => ({
         schema,
-    })
+        context: { jwt: req.jwt },
+    }))
 );
 
 app.use(

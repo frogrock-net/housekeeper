@@ -14,15 +14,21 @@ const typeDefs = `
     }
 
     extend type Mutation {
-        createUser(email: String, firstName: String, lastName: String, password: String): User
+        createUser(email: String, firstName: String, lastName: String, password: String): String
+        loginUser(email: String, password: String): String
     }
 `;
 
 const resolvers = {
     Query: {
-        allUsers: (root, args, context, info) => UserModel.find(),
-        userByEmail: (root, args, context, info) =>
-            UserModel.findOne({ email: args.email }),
+        allUsers: (root, args, context, info) => {
+            console.log(context);
+            if (!context.jwt) {
+                throw new Error('Not authorized');
+            }
+            return UserModel.find();
+        },
+        userByEmail: (root, args, context, info) => UserModel.findOne({ email: args.email }),
     },
 
     Mutation: {
@@ -37,7 +43,21 @@ const resolvers = {
                 }
             });
 
-            return user;
+            return user.generateToken();
+        },
+
+        loginUser: (root, args) => {
+            const token = UserModel.findOne({ email: args.email }, (err, user) => {
+                if (!user) {
+                    throw new Error('User not found!');
+                }
+
+                if (!user.validatePassword(args.password)) {
+                    throw new Error('Invalid password.');
+                }
+            }).then(user => user.generateToken());
+
+            return token;
         },
     },
 };
