@@ -6,10 +6,14 @@
         "axios": "^0.18.0",
         "babel-runtime": "^6.26.0",
         "body-parser": "^1.18.3",
+        "dotenv": "^6.1.0",
+        "crypto": "^1.0.1",
         "express": "^4.16.4",
+        "express-jwt": "^5.3.1",
         "graphql": "^14.0.2",
         "graphql-server-express": "^1.4.0",
         "graphql-tools": "^4.0.3",
+        "jsonwebtoken": "^8.4.0",
         "lodash": "^4.17.11",
         "moment": "^2.22.2",
         "mongoose": "^5.3.7",
@@ -21,9 +25,7 @@
         "react-router-dom": "^4.3.1",
         "regenerator-runtime": "^0.12.1",
         "styled-components": "^4.0.2",
-        "validator": "^10.8.0"
-    },
-    "devDependencies": {
+        "validator": "^10.8.0",
         "babel-cli": "^6.26.0",
         "babel-core": "^6.26.3",
         "babel-loader": "^7.1.5",
@@ -35,7 +37,9 @@
         "babel-preset-env": "^1.7.0",
         "babel-preset-flow": "^6.23.0",
         "babel-preset-react": "^6.24.1",
-        "babel-preset-stage-1": "^6.24.1",
+        "babel-preset-stage-1": "^6.24.1"
+    },
+    "devDependencies": {
         "circular-dependency-plugin": "^5.0.2",
         "clean-webpack-plugin": "^0.1.19",
         "concurrently": "^4.0.1",
@@ -63,9 +67,10 @@
         "flow": "flow",
         "devclient": "webpack-dev-server --config './webpack/webpack.dev.js'",
         "devserver": "nodemon src/server/js/server.js --exec 'kill-port 9229; babel-node --inspect'",
-        "build": "webpack --config './webpack/webpack.prod.js' && npx babel -d ./build ./src/server/js -s",
+        "build": "webpack --config './webpack/webpack.prod.js' && npx babel -d ./build/server/js ./src/server/js -s && npx babel -d ./build/common ./src/common -s",
         "dev": "concurrently \"npm run devserver\" \"npm run devclient\"",
-        "prod": "npm run build && node build/server.js"
+        "prod": "npm run build && node build/server/js/server.js",
+        "start": "node build/server/js/server.js"
     },
     "author": "alex & friends",
     "husky": {
