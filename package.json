@@ -66,10 +66,10 @@
         "flow": "flow",
         "devclient": "webpack-dev-server --config './webpack/webpack.dev.js'",
         "devserver": "nodemon src/server/js/server.js --exec babel-node --inspect",
-        "build": "webpack --config './webpack/webpack.prod.js' && npx babel -d ./build ./src/server/js -s",
+        "build": "webpack --config './webpack/webpack.prod.js' && npx babel -d ./build/server/js ./src/server/js -s && npx babel -d ./build/common ./src/common -s",
         "dev": "concurrently \"npm run devserver\" \"npm run devclient\"",
-        "prod": "npm run build && node build/server.js",
-        "start": "node build/server.js"
+        "prod": "npm run build && node build/server/js/server.js",
+        "start": "node build/server/js/server.js"
     },
     "author": "alex & friends",
     "husky": {
