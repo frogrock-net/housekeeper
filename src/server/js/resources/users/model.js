@@ -51,6 +51,31 @@ const endpoints = {
     getUserByEmail: email => {
         return UserModel.findOne({ email: email });
     },
+    createUser: (root, args) => {
+        const { email, firstName, lastName, password } = args;
+        const user = UserModel({ email, firstName, lastName });
+        user.setPassword(password);
+
+        user.save(err => {
+            if (err) {
+                next(err);
+            }
+        });
+        return user.generateToken();
+    },
+    loginUser: (root, args) => {
+        const token = UserModel.findOne({ email: args.email }, (err, user) => {
+            if (!user) {
+                throw new Error('User not found!');
+            }
+
+            if (!user.validatePassword(args.password)) {
+                throw new Error('Invalid password.');
+            }
+        }).then(user => user.generateToken());
+
+        return token;
+    },
 };
 
 export default endpoints;
