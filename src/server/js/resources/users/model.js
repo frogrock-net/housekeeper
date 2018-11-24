@@ -38,7 +38,8 @@ UserSchema.methods.generateToken = function() {
         {
             id: this.id,
         },
-        process.env.JWT_SECRET
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
     );
 };
 
