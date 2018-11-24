@@ -1,6 +1,8 @@
 steps:
     - name: 'gcr.io/cloud-builders/gsutil'
       args: ['cp', 'gs://housekeeper-223422.appspot.com/secrets/dev/.env', '.env']
+    - name: 'gcr.io/cloud-builders/gsutil'
+      args: ['cp', 'src/client/config/dev.js', 'src/client/config.js']
     - name: 'gcr.io/cloud-builders/npm'
       args: ['install']
     - name: 'gcr.io/cloud-builders/npm'
