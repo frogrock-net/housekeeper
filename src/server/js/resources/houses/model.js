@@ -25,4 +25,13 @@ const HouseSchema = new mongoose.Schema({
     name: { type: String, required: true },
 });
 
-export default mongoose.model('HouseModel', HouseSchema);
+const HouseModel = mongoose.model('HouseModel', HouseSchema);
+const endpoints = {
+    getAll: () => {
+        return HouseModel.find().exec();
+    },
+    getHousesByAdministrator: adminId => {
+        return HouseModel.find({ administrators: adminId }).exec();
+    },
+};
+export default endpoints;
