@@ -46,10 +46,10 @@ UserSchema.methods.generateToken = function() {
 const UserModel = mongoose.model('UserModel', UserSchema);
 const endpoints = {
     getAll: () => {
-        return UserModel.find();
+        return UserModel.find().exec();
     },
     getUserByEmail: email => {
-        return UserModel.findOne({ email: email });
+        return UserModel.findOne({ email: email }).exec();
     },
     createUser: (root, args) => {
         const { email, firstName, lastName, password } = args;

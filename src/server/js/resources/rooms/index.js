@@ -1,6 +1,7 @@
 import express from 'express';
 
 import RoomModel from './model';
+import UserModel from '../users/model';
 
 const router = new express.Router();
 
@@ -9,15 +10,9 @@ const router = new express.Router();
  *
  * Returns a list of rooms.
  */
-router.get('/', (req, res, next) => {
-    RoomModel.getAll()
-        .populate('house')
-        .exec((err, rooms) => {
-            if (err) {
-                return next(err);
-            }
-            res.json(rooms);
-        });
+router.get('/', async (req, res, next) => {
+    let rooms = await RoomModel.getAll();
+    res.json(rooms);
 });
 
 export default router;

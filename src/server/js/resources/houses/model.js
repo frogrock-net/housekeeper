@@ -28,10 +28,10 @@ const HouseSchema = new mongoose.Schema({
 const HouseModel = mongoose.model('HouseModel', HouseSchema);
 const endpoints = {
     getAll: () => {
-        return HouseModel.find();
+        return HouseModel.find().exec();
     },
     getHousesByAdministrator: adminId => {
-        return HouseModel.find({ administrators: adminId });
+        return HouseModel.find({ administrators: adminId }).exec();
     },
 };
 export default endpoints;

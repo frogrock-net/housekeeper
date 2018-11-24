@@ -13,10 +13,10 @@ const RoomSchema = new mongoose.Schema({
 const RoomModel = mongoose.model('RoomModel', RoomSchema);
 const endpoints = {
     getAll: () => {
-        return RoomModel.find();
+        return RoomModel.find().exec();
     },
     getAllRoomsByHouse: houseId => {
-        return RoomModel.find({ house: houseId });
+        return RoomModel.find({ house: houseId }).exec();
     },
 };
 
