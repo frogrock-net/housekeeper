@@ -1,7 +1,6 @@
 import express from 'express';
 
 import UserModel from './model';
-import HouseModel from '../houses/model';
 
 const router = new express.Router();
 

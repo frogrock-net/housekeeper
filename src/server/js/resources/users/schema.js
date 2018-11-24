@@ -22,7 +22,6 @@ const typeDefs = `
 const resolvers = {
     Query: {
         allUsers: (root, args, context, info) => {
-            console.log(context);
             if (!context.jwt) {
                 throw new Error('Not authorized');
             }
