@@ -47,6 +47,10 @@ const endpoints = {
     getHousesByAdministrator: adminId => HouseModel.find({ administrators: adminId }).exec(),
 
     update: (house, fields) => {
+        if (!isUndefined(fields.administrators)) {
+            house.administrators = fields.administrators;
+        }
+
         if (!isUndefined(fields.name)) {
             house.name = fields.name;
         }
