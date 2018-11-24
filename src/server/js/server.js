@@ -1,12 +1,11 @@
 require('babel-core/register');
 import bodyParser from 'body-parser';
 import express from 'express';
+import expressJwt from 'express-jwt';
 import { readdirSync, statSync } from 'fs';
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import path from 'path';
 
-import passport from './passport';
-import routes from './routes';
 import schema from './schema';
 
 const PORT = process.env.PORT || '8080';
