@@ -10,7 +10,7 @@ const router = new express.Router();
  * Returns a list of rooms.
  */
 router.get('/', (req, res, next) => {
-    RoomModel.find()
+    RoomModel.getAll()
         .populate('house')
         .exec((err, rooms) => {
             if (err) {

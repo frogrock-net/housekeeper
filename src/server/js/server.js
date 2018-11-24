@@ -43,7 +43,6 @@ app.use((err, req, res, next) => {
 });
 
 console.log(`Starting housekeeper server!`);
-
 dirs(`${__dirname}/resources`).forEach(dir => {
     const api = require(`./resources/${dir}`).default;
     console.log(`\tLoading API resource: ${dir}`);
@@ -75,6 +74,7 @@ app.listen(PORT, () => {
 
 let mongoose = require('mongoose');
 const dbUrl = 'mongodb://127.0.0.1:27017/housekeeper';
+
 mongoose.connect(
     dbUrl,
     { useNewUrlParser: true }

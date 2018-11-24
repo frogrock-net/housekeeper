@@ -5,7 +5,7 @@ import UserModel from './model';
 const router = new express.Router();
 
 router.get('/', (req, res, next) => {
-    return UserModel.find({}, (err, users) => {
+    return UserModel.getAll().exec((err, users) => {
         if (err) {
             return next(err);
         }

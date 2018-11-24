@@ -10,4 +10,14 @@ const RoomSchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model('RoomModel', RoomSchema);
+const RoomModel = mongoose.model('RoomModel', RoomSchema);
+const endpoints = {
+    getAll: () => {
+        return RoomModel.find();
+    },
+    getAllRoomsByHouse: houseId => {
+        return RoomModel.find({ house: houseId });
+    },
+};
+
+export default endpoints;

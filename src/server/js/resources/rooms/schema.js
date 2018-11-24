@@ -5,23 +5,20 @@ const typeDefs = `
         id: ID!
         capacity: Int
         description: String
-        house: House
+        house: String
     }
 
     extend type Query {
+        getRooms: [Room],
         roomsByHouse(houseId: ID!): [Room],
     }
 `;
 
 const resolvers = {
     Query: {
+        getRooms: (root, args, context, info) => RoomModel.getAll(),
         roomsByHouse: (root, args, context, info) =>
-            RoomModel.find({ house: args.houseId }).populate({
-                path: 'house',
-                populate: {
-                    path: 'administrators',
-                },
-            }),
+            RoomModel.getAllRoomsByHouse(args.houseId),
     },
 };
 

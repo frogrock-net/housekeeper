@@ -5,7 +5,7 @@ const typeDefs = `
         id: ID!
         email: String
         firstName: String
-        lastName: String
+        lastName: String    
     }
 
     extend type Query {
@@ -16,9 +16,9 @@ const typeDefs = `
 
 const resolvers = {
     Query: {
-        allUsers: (root, args, context, info) => UserModel.find(),
+        allUsers: (root, args, context, info) => UserModel.getAll(),
         userByEmail: (root, args, context, info) =>
-            UserModel.findOne({ email: args.email }),
+            UserModel.getUserByEmail(args.email),
     },
 };
 

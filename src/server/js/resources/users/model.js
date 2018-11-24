@@ -18,4 +18,14 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.virtual('fullName').get(() => `${this.firstName} ${this.lastName}`);
 
-export default mongoose.model('UserModel', UserSchema);
+const UserModel = mongoose.model('UserModel', UserSchema);
+const endpoints = {
+    getAll: () => {
+        return UserModel.find();
+    },
+    getUserByEmail: email => {
+        return UserModel.findOne({ email: email });
+    },
+};
+
+export default endpoints;
