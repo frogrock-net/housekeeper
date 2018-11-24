@@ -1,18 +1,16 @@
 require('babel-core/register');
-import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import bodyParser from 'body-parser';
-
-const PORT = process.env.PORT || '8080';
-
-const express = require('express');
-const path = require('path');
-const { readdirSync, statSync } = require('fs');
-const { join } = require('path');
+import express from 'express';
+import expressJwt from 'express-jwt';
+import { readdirSync, statSync } from 'fs';
+import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
+import path from 'path';
 
 import schema from './schema';
 
-const dirs = p =>
-    readdirSync(p).filter(f => statSync(join(p, f)).isDirectory());
+const PORT = process.env.PORT || '8080';
+
+const dirs = p => readdirSync(p).filter(f => statSync(path.join(p, f)).isDirectory());
 
 const app = express();
 
@@ -50,12 +48,22 @@ dirs(`${__dirname}/resources`).forEach(dir => {
     app.use(`/api/${dir}`, api);
 });
 
+app.use(bodyParser.json());
+
+const auth = expressJwt({
+    credentialsRequired: false,
+    secret: process.env.JWT_SECRET,
+    userProperty: 'jwt',
+});
+
+app.use(auth);
+
 app.use(
     '/graphql',
-    bodyParser.json(),
-    graphqlExpress({
+    graphqlExpress(req => ({
         schema,
-    })
+        context: { jwt: req.jwt },
+    }))
 );
 
 app.use(
@@ -77,7 +85,12 @@ let mongoose = require('mongoose');
 const dbUrl = 'mongodb://127.0.0.1:27017/housekeeper';
 mongoose.connect(
     dbUrl,
-    { useNewUrlParser: true }
+    // see dep warnings: https://mongoosejs.com/docs/deprecations.html
+    {
+        useCreateIndex: true,
+        useFindAndModify: false,
+        useNewUrlParser: true,
+    }
 );
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;

@@ -25,8 +25,7 @@ const typeDefs = `
 
 const resolvers = {
     Query: {
-        bookingsByUser: (root, args, context, info) =>
-            BookingModel.find({ booker: args.userId }).populate('booker'),
+        bookingsByUser: (root, args, context, info) => BookingModel.find({ booker: args.userId }).populate('booker'),
     },
 };
 
