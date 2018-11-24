@@ -3,6 +3,7 @@
 
 # Build artifacts
 build
+tmp
 
 # Logs
 logs
@@ -17,3 +18,4 @@ node_modules/
 
 # dotenv environment variables file
 .env
+

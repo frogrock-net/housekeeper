@@ -16,7 +16,7 @@ const dirs = p => readdirSync(p).filter(f => statSync(path.join(p, f)).isDirecto
 
 const app = express();
 
-app.use(express.static('build'));
+app.use(express.static('build/client/js'));
 
 // error handling is still a WIP.
 app.use((err, req, res, next) => {
@@ -76,7 +76,7 @@ app.use(
 );
 
 app.use('*', function(req, resp) {
-    resp.sendFile(path.resolve(`${__dirname}/../../../build/index.html`));
+    resp.sendFile(path.resolve(`${__dirname}/../../client/js/index.html`));
 });
 
 app.listen(PORT, () => {
