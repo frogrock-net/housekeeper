@@ -31,14 +31,10 @@ const endpoints = {
     create: (houseData, creatorId) => {
         const house = HouseModel(houseData);
         house.administrators = [creatorId];
-        return house.save(err => {
-            if (err) {
-                throw new Error(err);
-            }
-        });
+        return house.save();
     },
 
-    delete: id => HouseModel.findByIdAndRemove(id).exec(),
+    delete: house => house.remove(),
 
     get: id => HouseModel.findById(id).exec(),
 
