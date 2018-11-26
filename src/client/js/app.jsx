@@ -4,8 +4,10 @@ import Home from './components/Home/Home';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 import * as config from '../config';
+import State from './state/state';
 
-const client = new ApolloClient(`${config.API_URL}/graphql`);
+const state = new State();
+const StateContext = React.createContext();
 
 /**
  * The highest-level component for the housekeeper application.
@@ -13,8 +15,10 @@ const client = new ApolloClient(`${config.API_URL}/graphql`);
  * @constructor
  */
 const App = () => (
-    <ApolloProvider client={client}>
-        <Home />
+    <ApolloProvider client={state.client}>
+        <StateContext.Provider value={state}>
+            <Home />
+        </StateContext.Provider>
     </ApolloProvider>
 );
 

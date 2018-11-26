@@ -5,4 +5,4 @@
  * deployed to the development environment.
  */
 
-export const API_URL = 'https://housekeeper-223422.appspot.com/api';
+export const API_URL = 'https://housekeeper-223422.appspot.com/graphql';
