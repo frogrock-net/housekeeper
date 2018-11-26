@@ -1,6 +1,6 @@
+import { concat, isUndefined, map, partialRight } from 'lodash';
 import mongoose from 'mongoose';
 import validator from 'validator';
-import { partialRight } from 'lodash';
 
 const HouseSchema = new mongoose.Schema({
     address: {
@@ -26,12 +26,39 @@ const HouseSchema = new mongoose.Schema({
 });
 
 const HouseModel = mongoose.model('HouseModel', HouseSchema);
+
 const endpoints = {
-    getAll: () => {
-        return HouseModel.find().exec();
+    create: (houseData, creatorId) => {
+        const house = HouseModel(houseData);
+        house.administrators = [creatorId];
+        return house.save();
     },
-    getHousesByAdministrator: adminId => {
-        return HouseModel.find({ administrators: adminId }).exec();
+
+    delete: house => house.remove(),
+
+    get: id => HouseModel.findById(id).exec(),
+
+    getAll: () => HouseModel.find().exec(),
+
+    getHousesByAdministrator: adminId => HouseModel.find({ administrators: adminId }).exec(),
+
+    update: (house, fields) => {
+        if (!isUndefined(fields.administrators)) {
+            house.administrators = fields.administrators;
+        }
+
+        if (!isUndefined(fields.name)) {
+            house.name = fields.name;
+        }
+
+        const addressFields = ['street', 'city', 'state', 'zip'];
+        map(addressFields, addressField => {
+            if (!isUndefined(fields[addressField])) {
+                house.address[addressField] = fields[addressField];
+            }
+        });
+
+        return house.save();
     },
 };
 export default endpoints;
