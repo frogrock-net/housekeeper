@@ -2,10 +2,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Authenticate } from '../../state/auth';
+import { CreateHouse } from '../../state/house';
 
 const Home = () => (
     <Background>
         <Authenticate>{loginUser => <button onClick={() => loginUser({ email: 'test', password: 'test' })} />}</Authenticate>
+        <CreateHouse>{createHouse => <button onClick={() => createHouse({ name: 'alex test house' })} />}</CreateHouse>
     </Background>
 );
 

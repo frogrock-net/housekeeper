@@ -84,6 +84,10 @@ app.listen(PORT, () => {
 
 let mongoose = require('mongoose');
 
+mongoose.Types.ObjectId.prototype.valueOf = function() {
+    return this.toString();
+};
+
 // determine which mongodb location we should connect to...
 let dbUrl;
 if (process.env.MONGODB_URL) {

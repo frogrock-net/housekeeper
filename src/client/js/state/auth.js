@@ -10,6 +10,8 @@ import { Mutation } from 'react-apollo';
 import * as React from 'react';
 import { Fragment } from 'react';
 
+const jwtDecode = require('jwt-decode');
+
 /**
  * Authentication store.
  *
@@ -17,12 +19,13 @@ import { Fragment } from 'react';
  */
 class AuthStore {
     _token = null;
+    _id = null;
 
     /**
      * Construct an AuthStore, initializing the auth token from from localstorage if it exists.
      */
     constructor() {
-        this._token = localStorage.getItem('token');
+        this.token = localStorage.getItem('token');
     }
 
     /**
@@ -32,9 +35,16 @@ class AuthStore {
      *
      * @param token the token to set
      */
-    set token(token: string) {
+    set token(token: ?string) {
         this._token = token;
-        localStorage.setItem('token', token);
+        if (token) {
+            localStorage.setItem('token', token);
+            let decoded = jwtDecode(token);
+            this._id = decoded.id;
+        } else {
+            localStorage.removeItem('token');
+            this._id = null;
+        }
     }
 
     /**

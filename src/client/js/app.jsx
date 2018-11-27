@@ -1,13 +1,11 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import Home from './components/Home/Home';
-import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
-import * as config from '../config';
 import State from './state/state';
 
 const state = new State();
-const StateContext = React.createContext();
+const StateContext: React.Context<State> = React.createContext();
 
 /**
  * The highest-level component for the housekeeper application.
@@ -15,11 +13,11 @@ const StateContext = React.createContext();
  * @constructor
  */
 const App = () => (
-    <ApolloProvider client={state.client}>
-        <StateContext.Provider value={state}>
+    <StateContext.Provider value={state}>
+        <ApolloProvider client={state.client}>
             <Home />
-        </StateContext.Provider>
-    </ApolloProvider>
+        </ApolloProvider>
+    </StateContext.Provider>
 );
 
 export default App;
