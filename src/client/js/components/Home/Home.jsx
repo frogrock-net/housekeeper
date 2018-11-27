@@ -3,12 +3,17 @@ import React from 'react';
 import styled from 'styled-components';
 import Logo from '../Common/Logo';
 import Login from './Login';
+import { Redirect } from 'react-router-dom';
+import { StateContext } from '../../app';
 
+//
+//         <CreateHouse>{createHouse => <button onClick={() => createHouse({ name: 'alex test house' })} />}</CreateHouse>
 /**
  * Component that renders the home page.
  */
 const Home = () => (
     <Background>
+        <StateContext.Consumer>{state => (state.auth.token ? <Redirect to={'/dashboard'} /> : null)}</StateContext.Consumer>
         <Header />
         <Content>
             <ContentContainer>
@@ -46,7 +51,7 @@ const Header = styled.div`
  */
 const Content = styled.div`
     height: calc(100vh - 100px);
-    background: linear-gradient(#444, #b3d3e2 50%, #ffeab0 75%);
+    background: linear-gradient(#444, #b3d3e2 50%, #ffeab0 85%);
 `;
 
 const ContentContainer = styled.div`

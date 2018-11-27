@@ -85,7 +85,7 @@ type LoginFunction = LoginRequest => void;
  * The type signature for the render prop for the Authenticate component.
  *
  */
-type LoginRender = (onSubmit: LoginFunction, isLoading: boolean, error: ?Error) => React.Node;
+type LoginRender = (onSubmit: LoginFunction, isLoading: boolean, isSuccess: boolean, error: ?Error) => React.Node;
 
 /**
  * Props expected by the Authenticate component.
@@ -104,13 +104,14 @@ type Props = {
  * @constructor
  */
 export const Authenticate = ({ children }: Props) => {
-    const login = (mutate, { error, loading }, render) => {
-        let f = data => {
-            console.log(data);
-            mutate({ variables: data });
+    const login = (mutate, { data, error, loading }, render) => {
+        let f = input => {
+            console.log(input);
+            mutate({ variables: input });
         };
 
-        return <Fragment>{render(f, loading, error)}</Fragment>;
+        let success = !!data && !!data.loginUser;
+        return <Fragment>{render(f, loading, success, error)}</Fragment>;
     };
 
     const wrapper = (mutate, data) => login(mutate, data, children);

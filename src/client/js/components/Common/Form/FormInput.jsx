@@ -12,6 +12,7 @@ type Props = {
     icon?: any,
     focusedColor?: string,
     defaultColor?: string,
+    type?: string,
 };
 
 type State = {
@@ -25,6 +26,7 @@ export default class FormInput extends React.Component<Props, State> {
         size: 30,
         focusedColor: '#435e6e',
         defaultColor: '#999',
+        type: 'text',
     };
 
     state = {
@@ -66,6 +68,7 @@ export default class FormInput extends React.Component<Props, State> {
                     onChange={this.onChange}
                     onBlur={this.onBlur}
                     onFocus={this.onFocus}
+                    type={this.props.type}
                 />
             </InputContainer>
         );
@@ -86,6 +89,7 @@ const InputContainer = styled.div`
 
         height: ${props => props.size}px;
         font-size: ${props => props.size * (2 / 3)}px;
+        type: ${props => props.type};
     }
 
     div svg {

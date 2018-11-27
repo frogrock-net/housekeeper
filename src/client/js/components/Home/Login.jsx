@@ -4,6 +4,8 @@ import Form from '../Common/Form/Form';
 import FormInput from '../Common/Form/FormInput';
 import SubmitButton from '../Common/Form/SubmitButton';
 import { Email, Lock } from '../Common/Icon';
+import { Authenticate } from '../../state/auth';
+import { Redirect } from 'react-router-dom';
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -14,11 +16,19 @@ export default class Login extends React.Component {
         return (
             <LoginContainer>
                 <LoginText>Sign in to manage your house reservations.</LoginText>
-                <Form>
-                    <FormInput fieldName={'email'} icon={Email} />
-                    <FormInput fieldName={'password'} icon={Lock} />
-                    <SubmitButton>Sign in</SubmitButton>
-                </Form>
+                <Authenticate>
+                    {(loginUser, isLoading, isSuccess, error) => {
+                        console.log(isSuccess);
+                        if (isSuccess) return <Redirect to={'/dashboard'} />;
+                        return (
+                            <Form onSubmit={loginUser}>
+                                <FormInput fieldName={'email'} icon={Email} />
+                                <FormInput fieldName={'password'} icon={Lock} type={'password'} />
+                                <SubmitButton>Sign in</SubmitButton>
+                            </Form>
+                        );
+                    }}
+                </Authenticate>
             </LoginContainer>
         );
     }
