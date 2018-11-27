@@ -26,8 +26,8 @@ const Button = styled.button`
     line-height: 40px;
 
     color: #fff;
-    background-color: #8cab8e;
-    border: 1px solid #5a735c;
+    background-color: #435e6e;
+    border: 1px solid #334854;
     cursor: pointer;
 
     :disabled {
@@ -41,7 +41,7 @@ const Button = styled.button`
     }
 
     :hover {
-        background-color: #5a735c;
+        background-color: #334854;
     }
 
     :focus {
@@ -49,6 +49,6 @@ const Button = styled.button`
     }
 
     :active {
-        background-color: #39483a;
+        background-color: #212e34;
     }
 `;

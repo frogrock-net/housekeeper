@@ -10,6 +10,8 @@ type Props = {
     placeholder?: string,
     value?: string,
     icon?: any,
+    focusedColor?: string,
+    defaultColor?: string,
 };
 
 type State = {
@@ -21,6 +23,8 @@ export default class FormInput extends React.Component<Props, State> {
         onUpdate: (val: any) => {},
         value: '',
         size: 30,
+        focusedColor: '#435e6e',
+        defaultColor: '#999',
     };
 
     state = {
@@ -47,7 +51,12 @@ export default class FormInput extends React.Component<Props, State> {
         return (
             <InputContainer
                 size={this.props.size}
-                color={this.state.focused ? 'black' : '#999'}
+                color={
+                    this.state.focused
+                        ? this.props.focusedColor
+                        : this.props.defaultColor
+                }
+                className={this.props.className}
             >
                 {this.props.icon
                     ? React.createElement(this.props.icon, {
@@ -55,7 +64,6 @@ export default class FormInput extends React.Component<Props, State> {
                       })
                     : null}
                 <StyledInput
-                    className={this.props.className}
                     name={this.props.fieldName}
                     placeholder={this.props.placeholder}
                     value={this.props.value}

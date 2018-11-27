@@ -11,12 +11,14 @@ const Home = () => (
     <Background>
         <Header />
         <Content>
-            <LogoContainer>
-                <Logo size={100} />
-            </LogoContainer>
-            <LoginContainer>
-                <Login />
-            </LoginContainer>
+            <ContentContainer>
+                <LogoContainer>
+                    <Logo size={100} />
+                </LogoContainer>
+                <LoginContainer>
+                    <Login />
+                </LoginContainer>
+            </ContentContainer>
         </Content>
         <Footer />
     </Background>
@@ -45,6 +47,10 @@ const Header = styled.div`
 const Content = styled.div`
     height: calc(100vh - 100px);
     background: linear-gradient(#444, #b3d3e2 50%, #ffeab0 75%);
+`;
+
+const ContentContainer = styled.div`
+    padding-top: 150px;
 `;
 
 /**

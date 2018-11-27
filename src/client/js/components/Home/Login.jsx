@@ -39,4 +39,6 @@ const LoginContainer = styled.div`
 const LoginText = styled.span`
     font-family: 'Raleway', sans-serif;
     font-size: 18px;
+
+    color: #555;
 `;
