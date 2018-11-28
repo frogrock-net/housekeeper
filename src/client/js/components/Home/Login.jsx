@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import Form from '../Common/Form/Form';
 import FormInput from '../Common/Form/FormInput';
@@ -18,14 +18,17 @@ export default class Login extends React.Component {
                 <LoginText>Sign in to manage your house reservations.</LoginText>
                 <Authenticate>
                     {(loginUser, isLoading, isSuccess, error) => {
-                        console.log(isSuccess);
                         if (isSuccess) return <Redirect to={'/dashboard'} />;
+                        if (error) console.log(error);
                         return (
-                            <Form onSubmit={loginUser}>
-                                <FormInput fieldName={'email'} icon={Email} />
-                                <FormInput fieldName={'password'} icon={Lock} type={'password'} />
-                                <SubmitButton>Sign in</SubmitButton>
-                            </Form>
+                            <Fragment>
+                                <LoginError>{error ? `Please check your username and password.` : null}</LoginError>
+                                <Form onSubmit={loginUser}>
+                                    <FormInput error={!!error} fieldName={'email'} icon={Email} />
+                                    <FormInput error={!!error} fieldName={'password'} icon={Lock} type={'password'} />
+                                    <SubmitButton disabled={isLoading}>{!isLoading ? `Sign in` : `Loading`}</SubmitButton>
+                                </Form>
+                            </Fragment>
                         );
                     }}
                 </Authenticate>
@@ -44,9 +47,19 @@ const LoginContainer = styled.div`
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
 `;
 
-const LoginText = styled.span`
+const LoginText = styled.div`
     font-family: 'Raleway', sans-serif;
     font-size: 18px;
 
     color: #555;
+`;
+
+const LoginError = styled.div`
+    margin-top: 5px;
+    margin-bottom: -5px;
+    height: 5px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+
+    color: #a74343;
 `;

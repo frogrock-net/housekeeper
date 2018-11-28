@@ -12,7 +12,9 @@ type Props = {
     icon?: any,
     focusedColor?: string,
     defaultColor?: string,
+    errorColor?: string,
     type?: string,
+    error?: boolean,
 };
 
 type State = {
@@ -26,6 +28,7 @@ export default class FormInput extends React.Component<Props, State> {
         size: 30,
         focusedColor: '#435e6e',
         defaultColor: '#999',
+        errorColor: '#a74343',
         type: 'text',
     };
 
@@ -53,7 +56,7 @@ export default class FormInput extends React.Component<Props, State> {
         return (
             <InputContainer
                 size={this.props.size}
-                color={this.state.focused ? this.props.focusedColor : this.props.defaultColor}
+                color={this.props.error ? this.props.errorColor : this.state.focused ? this.props.focusedColor : this.props.defaultColor}
                 className={this.props.className}
             >
                 {this.props.icon

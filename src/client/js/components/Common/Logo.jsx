@@ -24,6 +24,7 @@ const LogoContainer = styled.div`
     display: flex;
     height: ${props => props.size}px;
     padding-right: ${props => props.size / 4}px;
+    user-select: none;
 `;
 
 const LogoText = styled.div`

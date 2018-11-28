@@ -58,6 +58,7 @@ class AuthStore {
     }
 }
 
+// the singleton auth object.
 const auth = new AuthStore();
 
 /**
@@ -107,8 +108,9 @@ type Props = {
 export const Authenticate = ({ children }: Props) => {
     const login = (mutate, { data, error, loading }, render) => {
         let f = input => {
-            console.log(input);
-            mutate({ variables: input });
+            if (input.email && input.password) {
+                mutate({ variables: input });
+            }
         };
 
         let success = !!data && !!data.loginUser;
@@ -118,8 +120,6 @@ export const Authenticate = ({ children }: Props) => {
     const wrapper = (mutate, data) => login(mutate, data, children);
 
     const update = (cache, e) => {
-        console.log('in update');
-        console.log(e);
         auth.token = e.data.loginUser;
     };
 

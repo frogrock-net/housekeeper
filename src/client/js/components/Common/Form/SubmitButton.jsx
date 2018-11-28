@@ -5,10 +5,11 @@ import styled from 'styled-components';
 type Props = {
     children?: React.Element<string>,
     className?: string,
+    disabled?: boolean,
 };
 
 const SubmitButton = (props: Props) => (
-    <Button type="submit" className={props.className}>
+    <Button type="submit" className={props.className} disabled={props.disabled}>
         {props.children}
     </Button>
 );
