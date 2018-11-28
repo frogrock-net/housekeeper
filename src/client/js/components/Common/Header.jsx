@@ -12,6 +12,9 @@ import Logo from './Logo';
  */
 const Header = props => <StateContext.Consumer>{state => <HeaderComponent {...props} />}</StateContext.Consumer>;
 
+/**
+ * An extremely-WIP header component.
+ */
 const HeaderComponent = props => (
     <Fragment>
         <Container>

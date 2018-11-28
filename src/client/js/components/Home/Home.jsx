@@ -6,8 +6,6 @@ import Login from './Login';
 import { Redirect } from 'react-router-dom';
 import { StateContext } from '../../app';
 
-//
-//         <CreateHouse>{createHouse => <button onClick={() => createHouse({ name: 'alex test house' })} />}</CreateHouse>
 /**
  * Component that renders the home page.
  */

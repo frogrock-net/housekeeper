@@ -2,12 +2,25 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+/**
+ * The props supported by this submit button.
+ * - children - the message to display on this button
+ * - className - a css class name to override this button's styles
+ * - disabled - should this button be disabled?
+ */
 type Props = {
     children?: React.Element<string>,
     className?: string,
     disabled?: boolean,
 };
 
+/**
+ * A submit button component.
+ *
+ * It has a number of styles attached to it to fit in with the theme of this app.
+ *
+ * @param props the props for this submit button
+ */
 const SubmitButton = (props: Props) => (
     <Button type="submit" className={props.className} disabled={props.disabled}>
         {props.children}
@@ -16,6 +29,9 @@ const SubmitButton = (props: Props) => (
 
 export default SubmitButton;
 
+/**
+ * The aforementioned styles.
+ */
 const Button = styled.button`
     width: 100%;
     height: 40px;

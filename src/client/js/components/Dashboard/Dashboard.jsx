@@ -2,21 +2,18 @@ import React, { Fragment } from 'react';
 import Header from '../Common/Header';
 import styled from 'styled-components';
 
-export default class Dashboard extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+/**
+ * An extremely-WIP dashboard component.
+ */
+const Dashboard = () => (
+    <Fragment>
+        <Header />
+        <Content />
+        <Footer />
+    </Fragment>
+);
 
-    render() {
-        return (
-            <Fragment>
-                <Header />
-                <Content />
-                <Footer />
-            </Fragment>
-        );
-    }
-}
+export default Dashboard;
 
 /**
  * The main 'content' div.

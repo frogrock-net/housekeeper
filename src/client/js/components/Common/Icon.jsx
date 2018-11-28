@@ -2,12 +2,22 @@
 import React from 'react';
 import styled from 'styled-components';
 
+/**
+ * The props supported by the Icon components.
+ *
+ * - className - a css class name to override this icon's styles
+ * - color - the color for the icon
+ * - size - the size of the icon. icons are square.
+ */
 type Props = {
     className?: string,
     color?: string,
     size: number,
 };
 
+/**
+ * Construct a generic Icon component.
+ */
 const Icon = ({ className, color, size, path }: { className?: string, color?: string, path: string, size: number }) => (
     <IconContainer color={color} size={size} className={className}>
         <svg viewBox="0 0 24 24">
@@ -16,6 +26,9 @@ const Icon = ({ className, color, size, path }: { className?: string, color?: st
     </IconContainer>
 );
 
+/**
+ * A styled div for an Icon component.
+ */
 const IconContainer = styled.div`
     height: ${props => props.size}px;
     width: ${props => props.size}px;
