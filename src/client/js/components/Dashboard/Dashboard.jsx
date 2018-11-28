@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import Header from '../Common/Header';
 
 export default class Dashboard extends React.Component {
     constructor(props) {
@@ -6,6 +7,11 @@ export default class Dashboard extends React.Component {
     }
 
     render() {
-        return <div>Hello.</div>;
+        return (
+            <Fragment>
+                <Header />
+                <div>Hello.</div>
+            </Fragment>
+        );
     }
 }

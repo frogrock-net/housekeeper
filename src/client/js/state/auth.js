@@ -9,6 +9,7 @@ import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import * as React from 'react';
 import { Fragment } from 'react';
+import { Redirect } from 'react-router-dom';
 
 const jwtDecode = require('jwt-decode');
 
@@ -126,6 +127,71 @@ export const Authenticate = ({ children }: Props) => {
         <Mutation mutation={AUTHENTICATE} update={update}>
             {wrapper}
         </Mutation>
+    );
+};
+
+type LogoutProps = {
+    children: (logout: () => void, props: {}) => React.Node,
+};
+
+type LogoutState = {
+    isAuthed: boolean,
+};
+
+/**
+ *
+ */
+export class Logout extends React.Component<LogoutProps, LogoutState> {
+    state = {
+        isAuthed: !!auth.token,
+    };
+
+    constructor(props: LogoutProps) {
+        super(props);
+    }
+
+    logout = () => {
+        auth.token = null;
+        this.setState({ isAuthed: false });
+    };
+
+    render() {
+        let { children, ...rest } = this.props;
+        return !this.state.isAuthed ? (
+            <Redirect
+                to={{
+                    pathname: '/',
+                }}
+            />
+        ) : (
+            children(this.logout, rest)
+        );
+    }
+}
+
+type RequireAuthProps = {
+    children: (props: {}) => React.Node,
+    referrer: string,
+};
+
+export const RequireAuth = (props: RequireAuthProps) => {
+    let { children, ...rest } = props;
+
+    return (
+        <Fragment>
+            {!auth.token ? (
+                <Redirect
+                    to={{
+                        pathname: '/',
+                        state: {
+                            referrer: rest.referrer,
+                        },
+                    }}
+                />
+            ) : (
+                children(rest)
+            )}
+        </Fragment>
     );
 };
 
