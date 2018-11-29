@@ -7,7 +7,23 @@ import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import * as React from 'react';
 import { Fragment } from 'react';
-import auth from './auth';
+
+/**
+ * Define the House type.
+ */
+export type House = {
+    id: string,
+    name: string,
+
+    address: {
+        street: ?string,
+        city: ?string,
+        state: ?string,
+        zip: ?string,
+    },
+
+    administrators: string[],
+};
 
 /**
  * GraphQL query mutation. Create a house.
@@ -79,8 +95,8 @@ export const CreateHouse = ({ children }: Props) => {
     const update = (cache, e) => {
         console.log('in update');
         console.log(e);
-        auth.token = e.data.loginUser;
     };
+
     return (
         <Mutation mutation={CREATE} update={update}>
             {wrapper}
