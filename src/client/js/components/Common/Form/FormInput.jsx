@@ -66,10 +66,8 @@ export default class FormInput extends React.Component<Props, State> {
      * Update this component's state when it's focused.
      *
      * We track whether the input is focused in order to change the icon color along with the form field color.
-     *
-     * @param e the event. unused.
      */
-    onFocus = (e: SyntheticInputEvent<HTMLInputElement>) => {
+    onFocus = () => {
         this.setState({
             focused: true,
         });
@@ -79,10 +77,8 @@ export default class FormInput extends React.Component<Props, State> {
      * Update this component's state when it loses focus.
      *
      * We track whether the input is focused in order to change the icon color along with the form field color.
-     *
-     * @param e the event. unused.
      */
-    onBlur = (e: SyntheticInputEvent<HTMLInputElement>) => {
+    onBlur = () => {
         this.setState({
             focused: false,
         });

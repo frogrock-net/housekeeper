@@ -10,8 +10,7 @@ import { Mutation } from 'react-apollo';
 import * as React from 'react';
 import { Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
-
-const jwtDecode = require('jwt-decode');
+import jwtDecode from 'jwt-decode';
 
 /**
  * Authentication store.
@@ -40,7 +39,7 @@ class AuthStore {
         this._token = token;
         if (token) {
             localStorage.setItem('token', token);
-            let decoded = jwtDecode(token);
+            const decoded = jwtDecode(token);
             this._id = decoded.id;
         } else {
             localStorage.removeItem('token');
@@ -60,6 +59,7 @@ class AuthStore {
 
 // the singleton auth object.
 const auth = new AuthStore();
+export default auth;
 
 /**
  * GraphQL query mutation. Authenticate a user given their email and password, and receive a signed JWT in response.
@@ -107,13 +107,13 @@ type Props = {
  */
 export const Authenticate = ({ children }: Props) => {
     const login = (mutate, { data, error, loading }, render) => {
-        let f = input => {
+        const f = input => {
             if (input.email && input.password) {
                 mutate({ variables: input });
             }
         };
 
-        let success = !!data && !!data.loginUser;
+        const success = !!data && !!data.loginUser;
         return <Fragment>{render(f, loading, success, error)}</Fragment>;
     };
 
@@ -130,16 +130,26 @@ export const Authenticate = ({ children }: Props) => {
     );
 };
 
+/**
+ * Type definition for the props accepted by the Logout component.
+ */
 type LogoutProps = {
     children: (logout: () => void, props: {}) => React.Node,
 };
 
+/**
+ * State maintained by the Logout component.
+ */
 type LogoutState = {
     isAuthed: boolean,
 };
 
 /**
+ * The Logout component.
  *
+ * Accepts a render prop (as a child), and passes the 'logout' function to the child.
+ *
+ * If the user is logged out, redirects to the login page.
  */
 export class Logout extends React.Component<LogoutProps, LogoutState> {
     state = {
@@ -156,7 +166,7 @@ export class Logout extends React.Component<LogoutProps, LogoutState> {
     };
 
     render() {
-        let { children, ...rest } = this.props;
+        const { children, ...rest } = this.props;
         return !this.state.isAuthed ? (
             <Redirect
                 to={{
@@ -169,13 +179,23 @@ export class Logout extends React.Component<LogoutProps, LogoutState> {
     }
 }
 
+/**
+ * Type definition for the props accepted by the RequireAuth component.
+ */
 type RequireAuthProps = {
     children: (props: {}) => React.Node,
     referrer: string,
 };
 
+/**
+ * The RequireAuth component.
+ *
+ * Accepts a render prop (as a child).
+ *
+ * If the user is logged in, displays the child component. If the user is logged out, redirects to the login page.
+ */
 export const RequireAuth = (props: RequireAuthProps) => {
-    let { children, ...rest } = props;
+    const { children, ...rest } = props;
 
     return (
         <Fragment>
@@ -194,5 +214,3 @@ export const RequireAuth = (props: RequireAuthProps) => {
         </Fragment>
     );
 };
-
-export default auth;

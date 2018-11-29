@@ -34,12 +34,7 @@ export default class Form extends React.Component<Props, State> {
      */
     constructor(props: Props) {
         super(props);
-
-        if (props.defaultValues) {
-            this.state = props.defaultValues;
-        } else {
-            this.state = {};
-        }
+        this.state = props.defaultValues || {};
     }
 
     /**
@@ -75,7 +70,7 @@ export default class Form extends React.Component<Props, State> {
                 <form onSubmit={this.onSubmit}>
                     {React.Children.map(this.props.children, child => {
                         return React.cloneElement(child, {
-                            onUpdate: this.onUpdate.bind(this),
+                            onUpdate: this.onUpdate,
                             value: this.state[child.props.fieldName],
                         });
                     })}

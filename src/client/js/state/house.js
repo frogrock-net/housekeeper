@@ -67,7 +67,7 @@ type Props = {
  */
 export const CreateHouse = ({ children }: Props) => {
     const create = (mutate, { error, loading }, render) => {
-        let f = data => {
+        const f = data => {
             console.log(data);
             mutate({ variables: data });
         };
