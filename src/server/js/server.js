@@ -1,13 +1,12 @@
 require('babel-core/register');
 require('dotenv').config();
-
 import bodyParser from 'body-parser';
 import express from 'express';
+import cors from 'cors';
 import expressJwt from 'express-jwt';
 import { readdirSync, statSync } from 'fs';
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import path from 'path';
-
 import schema from './schema';
 
 const PORT = process.env.PORT || '8080';
@@ -16,6 +15,7 @@ const dirs = p => readdirSync(p).filter(f => statSync(path.join(p, f)).isDirecto
 
 const app = express();
 
+app.use(cors());
 app.use(express.static('build/client/js'));
 
 // error handling is still a WIP.
@@ -83,6 +83,10 @@ app.listen(PORT, () => {
 });
 
 let mongoose = require('mongoose');
+
+mongoose.Types.ObjectId.prototype.valueOf = function() {
+    return this.toString();
+};
 
 // determine which mongodb location we should connect to...
 let dbUrl;

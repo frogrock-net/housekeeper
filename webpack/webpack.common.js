@@ -13,7 +13,7 @@ module.exports = {
     entry: './src/client/js/index.jsx',
 
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.webpack.js', '.web.js', '.mjs', '.js', '.jsx', '.json'],
     },
 
     output: {
@@ -45,6 +45,11 @@ module.exports = {
                         },
                     },
                 ],
+            },
+            {
+                test: /\.mjs$/,
+                include: /node_modules/,
+                type: 'javascript/auto',
             },
         ],
     },

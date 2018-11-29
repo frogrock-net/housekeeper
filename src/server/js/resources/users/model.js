@@ -64,18 +64,18 @@ const endpoints = {
         });
         return user.generateToken();
     },
-    loginUser: (root, args) => {
-        const token = UserModel.findOne({ email: args.email }, (err, user) => {
-            if (!user) {
-                throw new Error('User not found!');
-            }
+    loginUser: async (root, args) => {
+        const user = await UserModel.findOne({ email: args.email });
 
-            if (!user.validatePassword(args.password)) {
-                throw new Error('Invalid password.');
-            }
-        }).then(user => user.generateToken());
+        if (!user) {
+            throw new Error('User not found!');
+        }
 
-        return token;
+        if (!user.validatePassword(args.password)) {
+            throw new Error('Invalid password.');
+        }
+
+        return user.generateToken();
     },
 };
 

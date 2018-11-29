@@ -17,8 +17,7 @@ const typeDefs = `
 const resolvers = {
     Query: {
         getRooms: (root, args, context, info) => RoomModel.getAll(),
-        roomsByHouse: (root, args, context, info) =>
-            RoomModel.getAllRoomsByHouse(args.houseId),
+        roomsByHouse: (root, args, context, info) => RoomModel.getAllRoomsByHouse(args.houseId),
     },
 };
 
