@@ -22,6 +22,13 @@ const HouseSchema = new mongoose.Schema({
             required: true,
         },
     ],
+    members: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'UserModel',
+            default: [],
+        },
+    ],
     name: { type: String, required: true },
 });
 

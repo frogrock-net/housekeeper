@@ -14,6 +14,7 @@ const typeDefs = `
         id: ID!
         address: Address
         administrators: [String]
+        members: [String]
         name: String
     }
 
