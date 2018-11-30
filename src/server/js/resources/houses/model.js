@@ -49,6 +49,7 @@ const endpoints = {
 
     getHousesByAdministrator: adminId => HouseModel.find({ administrators: adminId }).exec(),
 
+    getHousesByMember: memberId => HouseModel.find({ members: memberId }).exec(),
 
     update: (house, fieldsToUpdate) => {
         const allowedFlatFields = ['administrators', 'members', 'name'];

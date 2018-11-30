@@ -21,6 +21,7 @@ const typeDefs = `
     extend type Query {
         allHouses: [House],
         housesByAdministrator(administratorId: ID!): [House],
+        housesByMember(memberId: ID!): [House],
     }
 
     extend type Mutation {
@@ -38,6 +39,7 @@ const resolvers = {
     Query: {
         allHouses: (root, args, context, info) => HouseModel.getAll(),
         housesByAdministrator: (root, args, context, info) => HouseModel.getHousesByAdministrator(args.administratorId),
+        housesByMember: (_, args) => HouseModel.getHousesByMember(args.memberId),
     },
 
     Mutation: {
