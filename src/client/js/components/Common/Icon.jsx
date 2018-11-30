@@ -81,3 +81,12 @@ export const Lock = (props: Props) => (
         }
     />
 );
+
+/**
+ * A 'house' icon.
+ *
+ * It looks like a boring house.
+ *
+ * @constructor
+ */
+export const HouseIcon = (props: Props) => <Icon {...props} path={'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'} />;
