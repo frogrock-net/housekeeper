@@ -25,6 +25,7 @@ const typeDefs = `
 
     extend type Mutation {
         addAdministratorToHouse(administratorId: ID!, houseId: ID!): House,
+        addMemberToHouse(memberId:ID!, houseId: ID!): House,
         createHouse(name: String!, street: String, city: String, state: String, zip: String): House,
         deleteHouse(houseId: ID!): House,
         updateHouse(houseId: ID!, name: String, street: String, city: String, state: String, zip: String): House,
@@ -51,6 +52,19 @@ const resolvers = {
 
             const administrators = concat(house.administrators, args.administratorId);
             return HouseModel.update(house, { administrators });
+        },
+
+        addMemberToHouse: async (_, args, context) => {
+            const house = await HouseModel.get(args.houseId).then(house => {
+                if (!isAdmin(context.jwt.id, house)) {
+                    throw new Error('Only administrators can add members to a house.');
+                }
+
+                return house;
+            });
+
+            const members = concat(house.members, args.memberId);
+            return HouseModel.update(house, { members });
         },
 
         createHouse: (_, args, context) => {

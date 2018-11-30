@@ -49,19 +49,20 @@ const endpoints = {
 
     getHousesByAdministrator: adminId => HouseModel.find({ administrators: adminId }).exec(),
 
-    update: (house, fields) => {
-        if (!isUndefined(fields.administrators)) {
-            house.administrators = fields.administrators;
-        }
 
-        if (!isUndefined(fields.name)) {
-            house.name = fields.name;
-        }
+    update: (house, fieldsToUpdate) => {
+        const allowedFlatFields = ['administrators', 'members', 'name'];
+        map(allowedFlatFields, field => {
+            const newValue = fieldsToUpdate[field];
+            if (!isUndefined(newValue)) {
+                house[field] = newValue;
+            }
+        });
 
         const addressFields = ['street', 'city', 'state', 'zip'];
         map(addressFields, addressField => {
-            if (!isUndefined(fields[addressField])) {
-                house.address[addressField] = fields[addressField];
+            if (!isUndefined(fieldsToUpdate[addressField])) {
+                house.address[addressField] = fieldsToUpdate[addressField];
             }
         });
 
