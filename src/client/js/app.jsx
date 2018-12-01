@@ -18,7 +18,7 @@ export const StateContext: React.Context<State> = React.createContext();
 const App = () => (
     <StateContext.Provider value={state}>
         <ApolloProvider client={state.client}>
-            <Route path={'/dashboard'} render={props => <RequireAuth {...props}>{props => <Dashboard {...props} />}</RequireAuth>} />
+            <Route path={'/hk'} render={props => <RequireAuth {...props}>{props => <Dashboard {...props} />}</RequireAuth>} />
             <Route exact path="/" component={Home} />
         </ApolloProvider>
     </StateContext.Provider>

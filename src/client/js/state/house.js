@@ -145,3 +145,47 @@ export const ListOwnedHouses = (props: ListOwnedHousesProps) => (
         )}
     </StateContext.Consumer>
 );
+
+/**
+ * Get a specific house by it's id.
+ */
+const GET_HOUSE = gql`
+    query GetHouse($houseId: ID!) {
+        getHouse(houseId: $houseId) {
+            id
+            name
+
+            address {
+                city
+                state
+                zip
+            }
+        }
+    }
+`;
+
+/**
+ * The type signature for the render prop for the GetHouse component.
+ */
+type GetHouseRender = (data: ?House, isLoading: boolean, error: ?Error) => React.Node;
+
+/**
+ * Props expected by the GetHouse component.
+ *
+ * Requires a render function passed as a child component.
+ */
+type GetHouseProps = {
+    id: string,
+    children: GetHouseRender,
+};
+
+/**
+ * Query component that fetches an individual house.
+ */
+export const GetHouse = (props: GetHouseProps) => (
+    <Query query={GET_HOUSE} variables={{ houseId: props.id }}>
+        {({ loading, error, data }) => {
+            return props.children(data ? data.getHouse : null, loading, error);
+        }}
+    </Query>
+);

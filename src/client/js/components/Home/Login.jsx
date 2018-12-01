@@ -17,7 +17,7 @@ const Login = () => (
         <LoginText>Sign in to manage your house reservations.</LoginText>
         <Authenticate>
             {(loginUser, isLoading, isSuccess, error) => {
-                if (isSuccess) return <Redirect to={'/dashboard'} />;
+                if (isSuccess) return <Redirect to={'/my'} />;
                 return (
                     <Fragment>
                         <LoginError>{error ? `Please check your username and password.` : null}</LoginError>

@@ -11,7 +11,7 @@ import { StateContext } from '../../app';
  */
 const Home = () => (
     <Background>
-        <StateContext.Consumer>{state => (state.auth.token ? <Redirect to={'/dashboard'} /> : null)}</StateContext.Consumer>
+        <StateContext.Consumer>{state => (state.auth.token ? <Redirect to={'/hk'} /> : null)}</StateContext.Consumer>
         <Header />
         <Content>
             <ContentContainer>

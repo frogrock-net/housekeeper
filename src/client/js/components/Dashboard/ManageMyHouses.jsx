@@ -2,29 +2,37 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import type { House } from '../../state/house';
-import { AddIcon, HouseIcon } from '../Common/Icon';
 import { ListOwnedHouses } from '../../state/house';
+import { AddIcon, HouseIcon } from '../Common/Icon';
+import { Link } from 'react-router-dom';
+import type { RouterProps } from '../../util/types';
 
-const ManageMyHouses = () => (
-    <OuterContainer>
-        <ListOwnedHouses>
-            {(data, isLoading, error) => {
-                console.log(data);
-                if (data) {
-                    return (
-                        <InnerContainer>
-                            {data.map((h, i) => (
-                                <HouseCard house={h} key={i} />
-                            ))}
-                            <CreateHouseCard />
-                        </InnerContainer>
-                    );
-                }
+const RouteContext: React.Context<any | RouterProps> = React.createContext();
 
-                return <div>No data.</div>;
-            }}
-        </ListOwnedHouses>
-    </OuterContainer>
+const ManageMyHouses = (props: RouterProps) => (
+    <RouteContext.Provider value={{ ...props }}>
+        <OuterContainer>
+            <ListOwnedHouses>
+                {(data, isLoading, error) => {
+                    console.log(data);
+                    if (data) {
+                        return <HouseContainer data={data} />;
+                    }
+
+                    return <div>No data.</div>;
+                }}
+            </ListOwnedHouses>
+        </OuterContainer>
+    </RouteContext.Provider>
+);
+
+const HouseContainer = props => (
+    <InnerContainer>
+        {props.data.map((h, i) => (
+            <HouseCard house={h} key={i} />
+        ))}
+        <CreateHouseCard />
+    </InnerContainer>
 );
 
 const InnerContainer = styled.div`
@@ -37,6 +45,7 @@ const InnerContainer = styled.div`
 
 const OuterContainer = styled.div`
     background-color: #b3d3e2;
+    height: 220px;
 `;
 
 const OuterText = styled.div`
@@ -50,12 +59,18 @@ const OuterText = styled.div`
 `;
 
 const HouseCard = ({ house }: { house: House }) => (
-    <CardBorder color={'#666'}>
-        <CardContainer>
-            <CardImage house={house} />
-            <CardName>{house.name}</CardName>
-        </CardContainer>
-    </CardBorder>
+    <RouteContext.Consumer>
+        {({ match }) => (
+            <Link to={`${match.url}/house/${house.id}`}>
+                <CardBorder color={'#666'}>
+                    <CardContainer>
+                        <CardImage house={house} />
+                        <CardName>{house.name}</CardName>
+                    </CardContainer>
+                </CardBorder>
+            </Link>
+        )}
+    </RouteContext.Consumer>
 );
 
 const CardBorder = styled.div`
@@ -114,16 +129,22 @@ const PlaceholderContainer = styled.div`
 `;
 
 const CreateHouseCard = () => (
-    <CardBorder color={'#666'}>
-        <CardContainer>
-            <CardImageContainer>
-                <PlaceholderContainer>
-                    <AddIcon size={65} color={'#eee'} />
-                </PlaceholderContainer>
-            </CardImageContainer>
-            <CardName>Add a house</CardName>
-        </CardContainer>
-    </CardBorder>
+    <RouteContext.Consumer>
+        {({ match }) => (
+            <Link to={`${match.url}/house/create`}>
+                <CardBorder color={'#666'}>
+                    <CardContainer>
+                        <CardImageContainer>
+                            <PlaceholderContainer>
+                                <AddIcon size={65} color={'#eee'} />
+                            </PlaceholderContainer>
+                        </CardImageContainer>
+                        <CardName>Add a house</CardName>
+                    </CardContainer>
+                </CardBorder>
+            </Link>
+        )}
+    </RouteContext.Consumer>
 );
 
 export default ManageMyHouses;

@@ -1,22 +1,11 @@
-import gql from 'graphql-tag';
-import * as React from 'react';
-import { Fragment } from 'react';
+import React from 'react';
 
-/**
- * Get all houses for a given administratorId.
- */
-const GET_HOUSES = gql`
-    {
-        query GetHouses($administratorId: String) {
-            housesByAdministrator(administratorId: $$administratorId) {
-                id
-                name
-            }
-        }
+export default class House extends React.Component {
+    constructor(props) {
+        super(props);
     }
-`;
 
-/**
- * I'm not really sure what's going on here yet.
- */
-const GetHouses = () => {};
+    render() {
+        return <div />;
+    }
+}

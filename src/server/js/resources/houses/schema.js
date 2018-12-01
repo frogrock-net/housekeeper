@@ -18,6 +18,7 @@ const typeDefs = `
     }
 
     extend type Query {
+        getHouse(houseId: ID!): House,
         allHouses: [House],
         housesByAdministrator(administratorId: ID!): [House],
     }
@@ -34,6 +35,7 @@ const isAdmin = (userId, house) => filter(house.administrators, admin => admin =
 
 const resolvers = {
     Query: {
+        getHouse: (root, args, context, info) => HouseModel.get(args.houseId),
         allHouses: (root, args, context, info) => HouseModel.getAll(),
         housesByAdministrator: (root, args, context, info) => HouseModel.getHousesByAdministrator(args.administratorId),
     },

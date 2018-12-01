@@ -1,21 +1,35 @@
+// @flow
 import React, { Fragment } from 'react';
 import Header from '../Common/Header';
 import styled from 'styled-components';
 import ManageMyHouses from './ManageMyHouses';
+import { Route } from 'react-router-dom';
+import type { RouterProps } from '../../util/types';
 
 /**
  * An extremely-WIP dashboard component.
  */
-const Dashboard = () => (
+const Dashboard = (props: RouterProps) => (
     <Fragment>
         <Header />
-        <ContentContainer>
-            <Content>
-                <ManageMyHouses />
-            </Content>
-        </ContentContainer>
+        <DashboardRouter {...props} />
         <Footer />
     </Fragment>
+);
+
+const DashboardRouter = props => (
+    <Fragment>
+        <Route path={`${props.match.url}/house`} render={props => <div>Hello.</div>} />
+        <Route exact path={props.match.url} render={props => <SIHP {...props} />} />
+    </Fragment>
+);
+
+const SIHP = (props: RouterProps) => (
+    <ContentContainer>
+        <Content>
+            <ManageMyHouses {...props} />
+        </Content>
+    </ContentContainer>
 );
 
 export default Dashboard;
