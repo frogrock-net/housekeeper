@@ -90,3 +90,12 @@ export const Lock = (props: Props) => (
  * @constructor
  */
 export const HouseIcon = (props: Props) => <Icon {...props} path={'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'} />;
+
+/**
+ * An 'add item' icon.
+ *
+ * It looks like a '+'.
+ *
+ * @constructor
+ */
+export const AddIcon = (props: Props) => <Icon {...props} path={'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'} />;

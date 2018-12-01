@@ -1,59 +1,13 @@
 // @flow
-import gql from 'graphql-tag';
 import styled from 'styled-components';
 import * as React from 'react';
-import { Query } from 'react-apollo';
-import { StateContext } from '../../app';
 import type { House } from '../../state/house';
-import { HouseIcon } from '../Common/Icon';
-
-/**
- * Get all houses for a given administratorId.
- */
-const GET_HOUSES = gql`
-    query GetHouses($administratorId: ID!) {
-        housesByAdministrator(administratorId: $administratorId) {
-            id
-            name
-        }
-    }
-`;
-
-/**
- * The type signature for the render prop for the GetHouses component.
- */
-type GetHousesRender = (data: House[], isLoading: boolean, error: ?Error) => React.Node;
-
-/**
- * Props expected by the GetHouses component.
- *
- * Requires a render function passed as a child component.
- */
-type Props = {
-    children: GetHousesRender,
-};
-
-/**
- * I'm not really sure what's going on here yet.
- */
-const GetHouses = (props: Props) => (
-    <StateContext.Consumer>
-        {state => (
-            <Query query={GET_HOUSES} variables={{ administratorId: state.auth._id }}>
-                {({ loading, error, data }) => {
-                    if (loading) return null;
-                    if (error) return `Error!: ${error}`;
-                    return props.children(data ? data.housesByAdministrator : [], loading, error);
-                }}
-            </Query>
-        )}
-    </StateContext.Consumer>
-);
+import { AddIcon, HouseIcon } from '../Common/Icon';
+import { ListOwnedHouses } from '../../state/house';
 
 const ManageMyHouses = () => (
     <OuterContainer>
-        <OuterText>Manage your houses.</OuterText>
-        <GetHouses>
+        <ListOwnedHouses>
             {(data, isLoading, error) => {
                 console.log(data);
                 if (data) {
@@ -62,13 +16,14 @@ const ManageMyHouses = () => (
                             {data.map((h, i) => (
                                 <HouseCard house={h} key={i} />
                             ))}
+                            <CreateHouseCard />
                         </InnerContainer>
                     );
                 }
 
                 return <div>No data.</div>;
             }}
-        </GetHouses>
+        </ListOwnedHouses>
     </OuterContainer>
 );
 
@@ -77,6 +32,7 @@ const InnerContainer = styled.div`
 
     padding: 10px;
     display: flex;
+    overflow-x: scroll;
 `;
 
 const OuterContainer = styled.div`
@@ -94,19 +50,28 @@ const OuterText = styled.div`
 `;
 
 const HouseCard = ({ house }: { house: House }) => (
-    <CardContainer>
-        <CardImage house={house} />
-        <CardName>{house.name}</CardName>
-    </CardContainer>
+    <CardBorder color={'#666'}>
+        <CardContainer>
+            <CardImage house={house} />
+            <CardName>{house.name}</CardName>
+        </CardContainer>
+    </CardBorder>
 );
 
-const CardContainer = styled.div`
-    height: 150px;
-    width: 150px;
+const CardBorder = styled.div`
     margin: 10px 10px;
+    padding: 10px;
+    height: 160px;
+    width: 160px;
+    background-color: ${props => props.color};
+    cursor: pointer;
+    flex-shrink: 0;
+`;
 
-    background-color: #999;
-    border: 10px solid rgba(0, 0, 0, 0.35);
+const CardContainer = styled.div`
+    margin: auto;
+    height: 100%;
+    width: 100%;
 
     display: flex;
     flex-direction: column;
@@ -114,8 +79,7 @@ const CardContainer = styled.div`
 `;
 
 const CardName = styled.div`
-    padding-top: 5px;
-    background-color: rgba(0, 0, 0, 0.35);
+    padding-top: 6px;
     color: white;
 
     font-family: 'Raleway', sans-serif;
@@ -126,13 +90,13 @@ const CardName = styled.div`
 `;
 
 const CardImage = props => (
-    <CardImageContainer>
+    <CardImageContainer color={'white'}>
         <Placeholder />
     </CardImageContainer>
 );
 
 const CardImageContainer = styled.div`
-    background-color: white;
+    background-color: ${props => props.color};
     height: calc(100% - 25px);
 `;
 
@@ -148,5 +112,18 @@ const PlaceholderContainer = styled.div`
     align-items: center;
     height: 100%;
 `;
+
+const CreateHouseCard = () => (
+    <CardBorder color={'#666'}>
+        <CardContainer>
+            <CardImageContainer>
+                <PlaceholderContainer>
+                    <AddIcon size={65} color={'#eee'} />
+                </PlaceholderContainer>
+            </CardImageContainer>
+            <CardName>Add a house</CardName>
+        </CardContainer>
+    </CardBorder>
+);
 
 export default ManageMyHouses;

@@ -4,9 +4,10 @@
  * - creating, updating, and deleting houses
  */
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
+import { Mutation, Query } from 'react-apollo';
 import * as React from 'react';
 import { Fragment } from 'react';
+import { StateContext } from '../app';
 
 /**
  * Define the House type.
@@ -70,7 +71,7 @@ type CreateHouseRender = (onSubmit: CreateHouseSubmit, isLoading: boolean, error
  *
  * Requires a render function passed as a child component.
  */
-type Props = {
+type CreateHouseProps = {
     children: CreateHouseRender,
 };
 
@@ -81,7 +82,7 @@ type Props = {
  * @returns {*}
  * @constructor
  */
-export const CreateHouse = ({ children }: Props) => {
+export const CreateHouse = ({ children }: CreateHouseProps) => {
     const create = (mutate, { error, loading }, render) => {
         const f = data => {
             console.log(data);
@@ -103,3 +104,44 @@ export const CreateHouse = ({ children }: Props) => {
         </Mutation>
     );
 };
+
+/**
+ * List all houses for a given administratorId.
+ */
+const LIST_OWNED_HOUSES = gql`
+    query ListOwnedHouses($administratorId: ID!) {
+        housesByAdministrator(administratorId: $administratorId) {
+            id
+            name
+        }
+    }
+`;
+
+/**
+ * The type signature for the render prop for the ListOwnedHouses component.
+ */
+type ListOwnedHousesRender = (data: House[], isLoading: boolean, error: ?Error) => React.Node;
+
+/**
+ * Props expected by the ListOwnedHouses component.
+ *
+ * Requires a render function passed as a child component.
+ */
+type ListOwnedHousesProps = {
+    children: ListOwnedHousesRender,
+};
+
+/**
+ * Query component that fetches a list containing each house the currently-authenticated user administers.
+ */
+export const ListOwnedHouses = (props: ListOwnedHousesProps) => (
+    <StateContext.Consumer>
+        {state => (
+            <Query query={LIST_OWNED_HOUSES} variables={{ administratorId: state.auth._id }}>
+                {({ loading, error, data }) => {
+                    return props.children(data ? data.housesByAdministrator : [], loading, error);
+                }}
+            </Query>
+        )}
+    </StateContext.Consumer>
+);
