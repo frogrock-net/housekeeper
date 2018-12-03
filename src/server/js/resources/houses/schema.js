@@ -34,7 +34,11 @@ const typeDefs = `
     }
 `;
 
-const isAdmin = (userId, house) => !isEmpty(filter(house.administrators, admin => admin == userId));
+const verifyIsAdmin = (jwt, house, errMsg) => {
+    if (!jwt || isEmpty(filter(house.administrators, admin => admin == jwt.id))) {
+        throw new Error(errMsg);
+    }
+};
 
 const resolvers = {
     Query: {
@@ -45,26 +49,16 @@ const resolvers = {
 
     Mutation: {
         addAdministratorToHouse: async (_, args, context) => {
-            const house = await HouseModel.get(args.houseId).then(house => {
-                if (!isAdmin(context.jwt.id, house)) {
-                    throw new Error('Only administrators can add administrators to a house.');
-                }
-
-                return house;
-            });
+            const house = await HouseModel.get(args.houseId);
+            verifyIsAdmin(context.jwt, house, 'Only administrators can add administrators to a house!');
 
             const administrators = concat(house.administrators, args.administratorId);
             return HouseModel.update(house, { administrators });
         },
 
         addMemberToHouse: async (_, args, context) => {
-            const house = await HouseModel.get(args.houseId).then(house => {
-                if (!isAdmin(context.jwt.id, house)) {
-                    throw new Error('Only administrators can add members to a house.');
-                }
-
-                return house;
-            });
+            const house = await HouseModel.get(args.houseId);
+            verifyIsAdmin(context.jwt, house, 'Only administrators can add members to a house.');
 
             const members = concat(house.members, args.memberId);
             return HouseModel.update(house, { members });
@@ -81,35 +75,23 @@ const resolvers = {
         },
 
         deleteHouse: async (_, args, context) => {
-            const house = await HouseModel.get(args.houseId).then(house => {
-                if (!isAdmin(context.jwt.id, house)) {
-                    throw new Error('Only administrators can delete a house.');
-                }
-
-                return house;
-            });
+            const house = await HouseModel.get(args.houseId);
+            verifyIsAdmin(context.jwt, house, 'Only administrators can delete a house.');
 
             return HouseModel.delete(house);
         },
 
         removeMemberFromHouse: async (_, args, context) => {
             const house = await HouseModel.get(args.houseId);
-            if (!isAdmin(context.jwt.id, house)) {
-                throw new Error('Only administrators can update a house.');
-            }
+            verifyIsAdmin(context.jwt, house, 'Only administrators can remove members from a house.');
 
             const members = reject(house.members, member => member == args.memberId);
             return HouseModel.update(house, { members });
         },
 
         updateHouse: async (_, args, context) => {
-            const house = await HouseModel.get(args.houseId).then(house => {
-                if (!isAdmin(context.jwt.id, house)) {
-                    throw new Error('Only administrators can update a house.');
-                }
-
-                return house;
-            });
+            const house = await HouseModel.get(args.houseId);
+            verifyIsAdmin(context.jwt, house, 'Only administrators can update a house.');
 
             return HouseModel.update(house, args);
         },
