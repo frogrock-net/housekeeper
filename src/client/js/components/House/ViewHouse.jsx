@@ -5,4 +5,6 @@ import { Fragment } from 'react';
 /**
  * I'm not really sure what's going on here yet.
  */
-const ViewHouse = () => {};
+const ViewHouse = props => <div>{props.id}</div>;
+
+export default ViewHouse;

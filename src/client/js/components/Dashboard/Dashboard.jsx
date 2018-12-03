@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import ManageMyHouses from './ManageMyHouses';
 import { Route } from 'react-router-dom';
 import type { RouterProps } from '../../util/types';
+import House from '../House/House';
 
 /**
  * An extremely-WIP dashboard component.
@@ -19,7 +20,7 @@ const Dashboard = (props: RouterProps) => (
 
 const DashboardRouter = props => (
     <Fragment>
-        <Route path={`${props.match.url}/house`} render={props => <div>Hello.</div>} />
+        <Route path={`${props.match.url}/house`} render={props => <House {...props} />} />
         <Route exact path={props.match.url} render={props => <SIHP {...props} />} />
     </Fragment>
 );
