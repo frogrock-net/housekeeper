@@ -18,6 +18,24 @@ const endpoints = {
     getAllRoomsByHouse: houseId => {
         return RoomModel.find({ house: houseId }).exec();
     },
+    createRoom: (root, args) => {
+        const { capacity, description, house } = args;
+        const room = RoomModel({ capacity, description, house });
+
+        room.save(err => {
+            if (err) {
+                next(err);
+            }
+        });
+
+        return room.id;
+    },
+    updateRoom: async (root, args) => {
+        return await RoomModel.findByIdAndUpdate(args.id, args, { new: true }).exec();
+    },
+    deleteRoom: async (root, args) => {
+        return await RoomModel.findByIdAndDelete(args.id).exec();
+    },
 };
 
 export default endpoints;
