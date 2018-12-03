@@ -1,4 +1,4 @@
-import { concat, filter } from 'lodash';
+import { concat, filter, isEmpty, reject } from 'lodash';
 
 import HouseModel from './model';
 
@@ -29,11 +29,12 @@ const typeDefs = `
         addMemberToHouse(memberId:ID!, houseId: ID!): House,
         createHouse(name: String!, street: String, city: String, state: String, zip: String): House,
         deleteHouse(houseId: ID!): House,
+        removeMemberFromHouse(memberId: ID!, houseId: ID!): House,
         updateHouse(houseId: ID!, name: String, street: String, city: String, state: String, zip: String): House,
     }
 `;
 
-const isAdmin = (userId, house) => filter(house.administrators, admin => admin == userId);
+const isAdmin = (userId, house) => !isEmpty(filter(house.administrators, admin => admin == userId));
 
 const resolvers = {
     Query: {
@@ -89,6 +90,16 @@ const resolvers = {
             });
 
             return HouseModel.delete(house);
+        },
+
+        removeMemberFromHouse: async (_, args, context) => {
+            const house = await HouseModel.get(args.houseId);
+            if (!isAdmin(context.jwt.id, house)) {
+                throw new Error('Only administrators can update a house.');
+            }
+
+            const members = reject(house.members, member => member == args.memberId);
+            return HouseModel.update(house, { members });
         },
 
         updateHouse: async (_, args, context) => {
