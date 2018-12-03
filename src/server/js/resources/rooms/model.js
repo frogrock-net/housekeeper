@@ -30,11 +30,11 @@ const endpoints = {
 
         return room.id;
     },
-    updateRoom: async (root, args) => {
-        return await RoomModel.findByIdAndUpdate(args.id, args, { new: true }).exec();
+    updateRoom: (root, args) => {
+        return RoomModel.findByIdAndUpdate(args.id, args, { new: true }).exec();
     },
-    deleteRoom: async (root, args) => {
-        return await RoomModel.findByIdAndDelete(args.id).exec();
+    deleteRoom: (root, args) => {
+        return RoomModel.findByIdAndDelete(args.id).exec();
     },
 };
 
