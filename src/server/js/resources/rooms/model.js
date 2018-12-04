@@ -12,29 +12,27 @@ const RoomSchema = new mongoose.Schema({
 
 const RoomModel = mongoose.model('RoomModel', RoomSchema);
 const endpoints = {
+    create: (root, args) => {
+        const { capacity, description, house } = args;
+        return RoomModel({ capacity, description, house }).save();
+    },
+
+    delete: (root, args) => {
+        return RoomModel.findByIdAndDelete(args.id).exec();
+    },
+
+    get: id => RoomModel.findById(id).exec(),
+
     getAll: () => {
         return RoomModel.find().exec();
     },
-    getAllRoomsByHouse: houseId => {
-        return RoomModel.find({ house: houseId }).exec();
-    },
-    createRoom: (root, args) => {
-        const { capacity, description, house } = args;
-        const room = RoomModel({ capacity, description, house });
 
-        room.save(err => {
-            if (err) {
-                next(err);
-            }
-        });
-
-        return room.id;
+    getAllRoomsByHouse: (root, args) => {
+        return RoomModel.find({ house: args.houseId }).exec();
     },
-    updateRoom: (root, args) => {
+
+    update: (root, args) => {
         return RoomModel.findByIdAndUpdate(args.id, args, { new: true }).exec();
-    },
-    deleteRoom: (root, args) => {
-        return RoomModel.findByIdAndDelete(args.id).exec();
     },
 };
 
