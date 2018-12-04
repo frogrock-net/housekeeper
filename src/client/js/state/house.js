@@ -23,6 +23,11 @@ export type House = {
         zip: ?string,
     },
 
+    icon: ?{
+        image: ?string,
+        color: ?string,
+    },
+
     administrators: string[],
 };
 

@@ -2,11 +2,12 @@
 import React, { Fragment } from 'react';
 import Header from '../Common/Header';
 import styled from 'styled-components';
-import ManageMyHouses from './ManageMyHouses';
 import { Route } from 'react-router-dom';
 import type { RouterProps } from '../../util/types';
 import House from '../House/House';
 import { ROUTE_HOUSE, ROUTE_HOUSEKEEPER } from '../../util/routes';
+import { ListOwnedHouses } from '../../state/house';
+import HouseHeader from '../House/HouseHeader';
 
 /**
  * An extremely-WIP dashboard component.
@@ -29,7 +30,7 @@ const DashboardRouter = props => (
 const SIHP = (props: RouterProps) => (
     <ContentContainer>
         <Content>
-            <ManageMyHouses {...props} />
+            <ListOwnedHouses>{(data, isLoading, error) => <HouseHeader data={data} isLoading={isLoading} error={error} />}</ListOwnedHouses>
         </Content>
     </ContentContainer>
 );
