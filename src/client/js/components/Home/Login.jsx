@@ -6,6 +6,7 @@ import SubmitButton from '../Common/Form/SubmitButton';
 import { Email, Lock } from '../Common/Icon';
 import { Authenticate } from '../../state/auth';
 import { Redirect } from 'react-router-dom';
+import { ROUTE_HOUSEKEEPER } from '../../util/routes';
 
 /**
  * The login component.
@@ -17,7 +18,7 @@ const Login = () => (
         <LoginText>Sign in to manage your house reservations.</LoginText>
         <Authenticate>
             {(loginUser, isLoading, isSuccess, error) => {
-                if (isSuccess) return <Redirect to={'/my'} />;
+                if (isSuccess) return <Redirect to={ROUTE_HOUSEKEEPER} />;
                 return (
                     <Fragment>
                         <LoginError>{error ? `Please check your username and password.` : null}</LoginError>

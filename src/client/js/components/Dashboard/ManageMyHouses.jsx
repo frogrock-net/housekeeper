@@ -6,24 +6,21 @@ import { ListOwnedHouses } from '../../state/house';
 import { AddIcon, HouseIcon } from '../Common/Icon';
 import { Link } from 'react-router-dom';
 import type { RouterProps } from '../../util/types';
-
-const RouteContext: React.Context<any | RouterProps> = React.createContext();
+import { ROUTE_HOUSE, ROUTE_HOUSE_CREATE } from '../../util/routes';
 
 const ManageMyHouses = (props: RouterProps) => (
-    <RouteContext.Provider value={{ ...props }}>
-        <OuterContainer>
-            <ListOwnedHouses>
-                {(data, isLoading, error) => {
-                    console.log(data);
-                    if (data) {
-                        return <HouseContainer data={data} />;
-                    }
+    <OuterContainer>
+        <ListOwnedHouses>
+            {(data, isLoading, error) => {
+                console.log(data);
+                if (data) {
+                    return <HouseContainer data={data} />;
+                }
 
-                    return <div>No data.</div>;
-                }}
-            </ListOwnedHouses>
-        </OuterContainer>
-    </RouteContext.Provider>
+                return <div>No data.</div>;
+            }}
+        </ListOwnedHouses>
+    </OuterContainer>
 );
 
 const HouseContainer = props => (
@@ -40,7 +37,8 @@ const InnerContainer = styled.div`
 
     padding: 10px;
     display: flex;
-    overflow-x: scroll;
+    overflow-x: auto;
+    overflow-y: hidden;
 `;
 
 const OuterContainer = styled.div`
@@ -59,18 +57,14 @@ const OuterText = styled.div`
 `;
 
 const HouseCard = ({ house }: { house: House }) => (
-    <RouteContext.Consumer>
-        {({ match }) => (
-            <Link to={`${match.url}/house/${house.id}`}>
-                <CardBorder color={'#666'}>
-                    <CardContainer>
-                        <CardImage house={house} />
-                        <CardName>{house.name}</CardName>
-                    </CardContainer>
-                </CardBorder>
-            </Link>
-        )}
-    </RouteContext.Consumer>
+    <Link to={`${ROUTE_HOUSE}/${house.id}`}>
+        <CardBorder color={'#666'}>
+            <CardContainer>
+                <CardImage house={house} />
+                <CardName>{house.name}</CardName>
+            </CardContainer>
+        </CardBorder>
+    </Link>
 );
 
 const CardBorder = styled.div`
@@ -129,22 +123,18 @@ const PlaceholderContainer = styled.div`
 `;
 
 const CreateHouseCard = () => (
-    <RouteContext.Consumer>
-        {({ match }) => (
-            <Link to={`${match.url}/house/create`}>
-                <CardBorder color={'#666'}>
-                    <CardContainer>
-                        <CardImageContainer>
-                            <PlaceholderContainer>
-                                <AddIcon size={65} color={'#eee'} />
-                            </PlaceholderContainer>
-                        </CardImageContainer>
-                        <CardName>Add a house</CardName>
-                    </CardContainer>
-                </CardBorder>
-            </Link>
-        )}
-    </RouteContext.Consumer>
+    <Link to={`${ROUTE_HOUSE_CREATE}`}>
+        <CardBorder color={'#666'}>
+            <CardContainer>
+                <CardImageContainer>
+                    <PlaceholderContainer>
+                        <AddIcon size={65} color={'#eee'} />
+                    </PlaceholderContainer>
+                </CardImageContainer>
+                <CardName>Add a house</CardName>
+            </CardContainer>
+        </CardBorder>
+    </Link>
 );
 
 export default ManageMyHouses;

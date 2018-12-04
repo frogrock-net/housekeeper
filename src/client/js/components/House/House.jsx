@@ -8,8 +8,7 @@ import styled from 'styled-components';
 import type { House as HouseType } from '../../state/house';
 import { ListOwnedHouses } from '../../state/house';
 import { HouseIcon } from '../Common/Icon';
-
-const RouteContext: React.Context<any | RouterProps> = React.createContext();
+import { ROUTE_HOUSE, ROUTE_HOUSE_CREATE, ROUTE_HOUSE_VIEW } from '../../util/routes';
 
 /**
  * An extremely-WIP house component.
@@ -21,21 +20,19 @@ const HouseRouter = (props: RouterProps) => (
         <Switch>
             <Route
                 exact
-                path={`${props.match.url}/create`}
+                path={ROUTE_HOUSE_CREATE}
                 render={props => (
                     <Fragment>
                         <HouseHeader {...props} />
-                        <div>Create.</div>}
+                        <div>Create.</div>
                     </Fragment>
                 )}
             />
             <Route
-                path={`${props.match.url}/:id`}
+                path={ROUTE_HOUSE_VIEW}
                 render={props => (
                     <Fragment>
-                        <RouteContext.Provider value={{ ...props }}>
-                            <HouseHeader selected={props.match.params.id} />
-                        </RouteContext.Provider>
+                        <HouseHeader selected={props.match.params.id} />
                         <ViewHouse id={props.match.params.id} />
                     </Fragment>
                 )}
@@ -80,24 +77,30 @@ class HouseHeader extends React.Component<{ selected: string }> {
  * A 50px header.
  */
 const Container = styled.div`
-    height: 140px;
+    height: 220px;
     background: #b3d3e2;
     display: flex;
 `;
 
+const HouseCardContainer = styled.div`
+    background-color: ${props => (props.selected ? '#65727b' : null)};
+
+    :first-child {
+        padding-left: 10px;
+    }
+`;
+
 const HouseCard = ({ selected, house }: { selected: boolean, house: HouseType }) => (
-    <RouteContext.Consumer>
-        {match => (
-            <Link to={`${match.url}/../${house.id}`}>
-                <CardBorder color={'#666'} selected={selected}>
-                    <CardContainer>
-                        <CardImage house={house} />
-                        <CardName>{house.name}</CardName>
-                    </CardContainer>
-                </CardBorder>
-            </Link>
-        )}
-    </RouteContext.Consumer>
+    <HouseCardContainer selected={selected}>
+        <Link selected={selected} to={`${ROUTE_HOUSE}/${house.id}`}>
+            <CardBorder color={'#666'} selected={selected}>
+                <CardContainer>
+                    <CardImage house={house} />
+                    <CardName>{house.name}</CardName>
+                </CardContainer>
+            </CardBorder>
+        </Link>
+    </HouseCardContainer>
 );
 
 /*
@@ -158,17 +161,18 @@ const PlaceholderContainer = styled.div`
 const InnerContainer = styled.div`
     background-color: #b3d3e2;
 
-    padding: 10px;
     display: flex;
-    overflow-x: scroll;
+
+    overflow-x: auto;
+    overflow-y: hidden;
 `;
 
 const CardBorder = styled.div`
-    margin: 10px 10px;
+    margin: 20px 10px;
     padding: 10px;
-    height: 85px;
+    height: 160px;
     width: 160px;
-    background-color: ${props => props.color};
+    background-color: ${props => (props.selected ? '#65727b' : props.color)};
     cursor: pointer;
     flex-shrink: 0;
 `;

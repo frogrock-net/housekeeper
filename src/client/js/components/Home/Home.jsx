@@ -5,13 +5,14 @@ import Logo from '../Common/Logo';
 import Login from './Login';
 import { Redirect } from 'react-router-dom';
 import { StateContext } from '../../app';
+import { ROUTE_HOUSEKEEPER } from '../../util/routes';
 
 /**
  * Component that renders the home page.
  */
 const Home = () => (
     <Background>
-        <StateContext.Consumer>{state => (state.auth.token ? <Redirect to={'/hk'} /> : null)}</StateContext.Consumer>
+        <StateContext.Consumer>{state => (state.auth.token ? <Redirect to={ROUTE_HOUSEKEEPER} /> : null)}</StateContext.Consumer>
         <Header />
         <Content>
             <ContentContainer>
