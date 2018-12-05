@@ -2,9 +2,10 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import type { House } from '../../state/house';
-import { AddIcon, HouseIcon } from '../Common/Icon';
+import { AddIcon, ErrorIcon, HouseIcon } from '../Common/Icon';
 import { Link } from 'react-router-dom';
 import { ROUTE_HOUSE, ROUTE_HOUSE_CREATE } from '../../util/routes';
+import Loading from '../Common/Loading';
 
 /**
  * Type defining the props accepted by the HouseHeader component.
@@ -40,15 +41,23 @@ type Props = {
  */
 const HouseHeader = (props: Props) => {
     if (props.isLoading) {
-        return <div />;
+        return (
+            <Container color={props.color} className={props.className}>
+                <LoadingHouseCard color={props.color} />
+            </Container>
+        );
     }
 
     if (props.error) {
-        return <div>error</div>;
+        return (
+            <Container color={'#ad6f6f'} className={props.className}>
+                <ErrorHouseCard />
+            </Container>
+        );
     }
 
     return (
-        <Container className={props.className}>
+        <Container color={props.color} className={props.className}>
             {props.data
                 ? props.data.map((h, i) => (
                       <HouseCard
@@ -83,10 +92,8 @@ export default HouseHeader;
  */
 const Container = styled.div`
     height: 220px;
-    background: #b3d3e2;
+    background: ${props => props.color};
     display: flex;
-
-    background-color: #b3d3e2;
 
     display: flex;
     justify-content: center;
@@ -270,5 +277,46 @@ const CreateHouseCard = ({ isSelected, color, selectedColor }) => (
                 </CardContainer>
             </CardBorder>
         </Link>
+    </HouseCardContainer>
+);
+
+// -----------------------------------------------------------------------------
+// LoadingHouseCard
+// -----------------------------------------------------------------------------
+
+/**
+ * A LoadingHouseCard that displays a loading animation inside of a card.
+ */
+const LoadingHouseCard = () => (
+    <HouseCardContainer>
+        <CardBorder color={'#666'}>
+            <CardContainer>
+                <PlaceholderContainer>
+                    <Loading />
+                </PlaceholderContainer>
+            </CardContainer>
+        </CardBorder>
+    </HouseCardContainer>
+);
+
+// -----------------------------------------------------------------------------
+// ErrorHouseCard
+// -----------------------------------------------------------------------------
+
+/**
+ * An ErrorHouseCard that displays an error graphic inside of a card.
+ */
+const ErrorHouseCard = () => (
+    <HouseCardContainer>
+        <CardBorder>
+            <CardContainer>
+                <CardImageContainer>
+                    <PlaceholderContainer>
+                        <ErrorIcon size={65} color={'white'} />
+                    </PlaceholderContainer>
+                </CardImageContainer>
+                <CardName>An error occurred.</CardName>
+            </CardContainer>
+        </CardBorder>
     </HouseCardContainer>
 );

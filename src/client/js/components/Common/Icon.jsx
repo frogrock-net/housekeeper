@@ -99,3 +99,14 @@ export const HouseIcon = (props: Props) => <Icon {...props} path={'M10 20v-6h4v6
  * @constructor
  */
 export const AddIcon = (props: Props) => <Icon {...props} path={'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'} />;
+
+/**
+ * An 'error' icon.
+ *
+ * It looks like a filled circle with a '!'.
+ *
+ * @constructor
+ */
+export const ErrorIcon = (props: Props) => (
+    <Icon {...props} path={'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'} />
+);
