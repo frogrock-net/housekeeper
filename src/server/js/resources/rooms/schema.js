@@ -32,33 +32,28 @@ const resolvers = {
 
     Mutation: {
         createRoom: async (root, args, context) => {
-            await HouseModel.get(args.house).then(house => {
-                if (!isAdmin(context.jwt.id, house)) {
-                    throw new Error('Only administrators can add rooms to a house.');
-                }
-            });
+            const house = await HouseModel.get(args.house);
+            if (!isAdmin(context.jwt.id, house)) {
+                throw new Error('Only administrators can add rooms to a house.');
+            }
             return RoomModel.create(args);
         },
 
         updateRoom: async (root, args, context) => {
-            await RoomModel.get(args.id).then(async room => {
-                await HouseModel.get(room.house).then(house => {
-                    if (!isAdmin(context.jwt.id, house)) {
-                        throw new Error('Only administrators can update rooms.');
-                    }
-                });
-            });
+            const room = await RoomModel.get(args.id);
+            const house = await HouseModel.get(room.house);
+            if (!isAdmin(context.jwt.id, house)) {
+                throw new Error('Only administrators can update rooms.');
+            }
             return RoomModel.update(args);
         },
 
         deleteRoom: async (root, args, context) => {
-            await RoomModel.get(args.id).then(async room => {
-                await HouseModel.get(room.house).then(house => {
-                    if (!isAdmin(context.jwt.id, house)) {
-                        throw new Error('Only administrators can delete rooms.');
-                    }
-                });
-            });
+            const room = await RoomModel.get(args.id);
+            const house = await HouseModel.get(room.house);
+            if (!isAdmin(context.jwt.id, house)) {
+                throw new Error('Only administrators can delete rooms.');
+            }
             return RoomModel.delete(args);
         },
     },
