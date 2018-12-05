@@ -27,7 +27,7 @@ const isAdmin = (userId, house) => find(house.administrators, admin => admin == 
 const resolvers = {
     Query: {
         getRooms: () => RoomModel.getAll(),
-        roomsByHouse: (root, args) => RoomModel.getAllRoomsByHouse(root, args),
+        roomsByHouse: (root, args) => RoomModel.getAllRoomsByHouse(args),
     },
 
     Mutation: {
@@ -37,7 +37,7 @@ const resolvers = {
                     throw new Error('Only administrators can add rooms to a house.');
                 }
             });
-            return RoomModel.create(root, args);
+            return RoomModel.create(args);
         },
 
         updateRoom: async (root, args, context) => {
@@ -48,7 +48,7 @@ const resolvers = {
                     }
                 });
             });
-            return RoomModel.update(root, args);
+            return RoomModel.update(args);
         },
 
         deleteRoom: async (root, args, context) => {
@@ -59,7 +59,7 @@ const resolvers = {
                     }
                 });
             });
-            return RoomModel.delete(root, args);
+            return RoomModel.delete(args);
         },
     },
 };

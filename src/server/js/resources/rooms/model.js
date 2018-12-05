@@ -12,12 +12,12 @@ const RoomSchema = new mongoose.Schema({
 
 const RoomModel = mongoose.model('RoomModel', RoomSchema);
 const endpoints = {
-    create: (root, args) => {
+    create: args => {
         const { capacity, description, house } = args;
         return RoomModel({ capacity, description, house }).save();
     },
 
-    delete: (root, args) => {
+    delete: args => {
         return RoomModel.findByIdAndDelete(args.id).exec();
     },
 
@@ -27,11 +27,11 @@ const endpoints = {
         return RoomModel.find().exec();
     },
 
-    getAllRoomsByHouse: (root, args) => {
+    getAllRoomsByHouse: args => {
         return RoomModel.find({ house: args.houseId }).exec();
     },
 
-    update: (root, args) => {
+    update: args => {
         return RoomModel.findByIdAndUpdate(args.id, args, { new: true }).exec();
     },
 };
