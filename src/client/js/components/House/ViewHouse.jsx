@@ -16,17 +16,17 @@ const ViewHouse = props => (
  * A 50px header.
  */
 const Container = styled.div`
-    height: 220px;
     background: #65727b;
     display: flex;
-    padding: 10px;
+    padding: 15px;
 `;
 
 /**
  * A 50px header.
  */
 const InnerContainer = styled.div`
-    background: #ccc;
+    background: white;
+    padding: 10px;
     width: 100%;
 `;
 
