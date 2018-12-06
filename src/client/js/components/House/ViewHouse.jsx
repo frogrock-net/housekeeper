@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from 'react';
-import { Fragment } from 'react';
 import styled from 'styled-components';
 import { GetHouse } from '../../state/house';
 import Loading from '../Common/Loading';
@@ -83,6 +82,24 @@ const InnerContainer = styled.div`
     margin: 0px auto;
 `;
 
+/**
+ * A container for the ViewHouse error/loading components that extends InnerContainer and centers the contents.
+ */
+const CenteredContainer = styled(InnerContainer)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+// -----------------------------------------------------------------------------
+// Banner
+// -----------------------------------------------------------------------------
+
+/**
+ * A component that displays house information as a banner.
+ *
+ * @param house the house
+ */
 const Banner = ({ house }) => {
     const color = house && house.icon ? house.icon.color || 'white' : 'white';
     const image = house && house.icon && house.icon.image ? <BannerImage image={house.icon.image} /> : <Placeholder color={color} />;
@@ -90,8 +107,20 @@ const Banner = ({ house }) => {
         <BannerContainer>
             <BannerImageContainer color={color}>{image}</BannerImageContainer>
             <BannerName>{house.name}</BannerName>
+            <BannerAddress address={house.address} />
         </BannerContainer>
     );
+};
+
+/**
+ * Component that displays the location for the house.
+ *
+ * @param address the house's address object
+ */
+const BannerAddress = ({ address }) => {
+    if (!address || (!address.city && !address.state)) return null;
+    const text = address.city && address.state ? `${address.city}, ${address.state}` : address.city ? address.city : address.state;
+    return <BannerLocation>{text}</BannerLocation>;
 };
 
 /**
@@ -114,6 +143,18 @@ const BannerName = styled.div`
     background-color: #eee;
 `;
 
+const BannerLocation = styled.div`
+    padding-bottom: 10px;
+    color: #666;
+
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+    font-size: 17px;
+
+    text-align: center;
+    background-color: #eee;
+`;
+
 /**
  * A styled div that contains a background image.
  */
@@ -129,15 +170,6 @@ const BannerImage = styled.div`
 const BannerImageContainer = styled.div`
     height: 150px;
     background-color: ${props => props.color};
-`;
-
-/**
- * A container for the ViewHouse error/loading components that extends InnerContainer and centers the contents.
- */
-const CenteredContainer = styled(InnerContainer)`
-    display: flex;
-    justify-content: center;
-    align-items: center;
 `;
 
 // -----------------------------------------------------------------------------

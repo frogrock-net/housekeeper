@@ -33,6 +33,8 @@ export type House = {
         color: ?string,
     },
 
+    images: ?(string[]),
+
     administrators: string[],
 };
 
