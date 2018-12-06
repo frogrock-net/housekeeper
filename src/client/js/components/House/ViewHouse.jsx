@@ -5,9 +5,12 @@ import styled from 'styled-components';
 import { GetHouse } from '../../state/house';
 import Loading from '../Common/Loading';
 import { ErrorIcon, HouseIcon } from '../Common/Icon';
+import ThumbnailGallery from '../Common/ThumbnailGallery';
+import { GetRoomsForHouse } from '../../state/rooms';
 
 /**
  * The props accepted by the ViewHouse component.
+ * - id - string - the house id for this component to show
  */
 type Props = {
     id: string,
@@ -54,6 +57,8 @@ const renderViewHouse = (data, isLoading, error) => {
         <Container>
             <InnerContainer>
                 <Banner house={data} />
+                <ThumbnailGallery images={data.images} />
+                <RoomList house={data} />
             </InnerContainer>
         </Container>
     );
@@ -194,3 +199,23 @@ const PlaceholderContainer = styled.div`
     align-items: center;
     height: 100%;
 `;
+
+// -----------------------------------------------------------------------------
+// RoomList
+// -----------------------------------------------------------------------------
+
+const RoomList = ({ house }) => <GetRoomsForHouse id={house.id}>{renderRoomList}</GetRoomsForHouse>;
+
+const renderRoomList = (data, isLoading, error) => {
+    if (data) {
+        return (
+            <div>
+                {data.map((r, i) => {
+                    return <div key={i}>{r.id}</div>;
+                })}
+            </div>
+        );
+    } else {
+        return <div>no data</div>;
+    }
+};
