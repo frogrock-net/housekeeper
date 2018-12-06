@@ -28,6 +28,11 @@ export type House = {
         color: ?string,
     },
 
+    banner: ?{
+        image: ?string,
+        color: ?string,
+    },
+
     administrators: string[],
 };
 
