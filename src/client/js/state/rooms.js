@@ -16,6 +16,9 @@ export type Room = {
     id: string,
     name: string,
     description: ?string,
+
+    capacity: ?number,
+    image: ?string,
 };
 
 /**
@@ -26,6 +29,7 @@ const GET_ROOMS_FOR_HOUSE = gql`
         roomsByHouse(houseId: $houseId) {
             id
             description
+            capacity
         }
     }
 `;

@@ -1,10 +1,11 @@
 // @flow
 
 import * as React from 'react';
+import { Fragment } from 'react';
 import styled from 'styled-components';
 import { GetHouse } from '../../state/house';
 import Loading from '../Common/Loading';
-import { ErrorIcon, HouseIcon } from '../Common/Icon';
+import { BedIcon, ErrorIcon, HouseIcon } from '../Common/Icon';
 import ThumbnailGallery from '../Common/ThumbnailGallery';
 import { GetRoomsForHouse } from '../../state/rooms';
 
@@ -107,7 +108,7 @@ const CenteredContainer = styled(InnerContainer)`
  */
 const Banner = ({ house }) => {
     const color = house && house.icon ? house.icon.color || 'white' : 'white';
-    const image = house && house.icon && house.icon.image ? <BannerImage image={house.icon.image} /> : <Placeholder color={color} />;
+    const image = house && house.icon && house.icon.image ? <BannerImage image={house.icon.image} /> : <PlaceholderHouse color={color} />;
     return (
         <BannerContainer>
             <BannerImageContainer color={color}>{image}</BannerImageContainer>
@@ -140,7 +141,7 @@ const BannerName = styled.div`
     padding: 10px;
     color: #333;
 
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Arvo', sans-serif;
     font-weight: bold;
     font-size: 20px;
 
@@ -184,14 +185,14 @@ const BannerImageContainer = styled.div`
 /**
  * A placeholder icon component that can be used instead of a house image.
  */
-const Placeholder = () => (
+const PlaceholderHouse = () => (
     <PlaceholderContainer>
         <HouseIcon size={65} color={'rgba(0,0,0,.25)'} />
     </PlaceholderContainer>
 );
 
 /**
- * A styled container div for the Placeholder component.
+ * A styled container div for the PlaceholderHouse component.
  */
 const PlaceholderContainer = styled.div`
     display: flex;
@@ -200,22 +201,162 @@ const PlaceholderContainer = styled.div`
     height: 100%;
 `;
 
+/**
+ * A placeholder icon component that can be used instead of a house image.
+ */
+const PlaceholderRoom = () => (
+    <PlaceholderContainer>
+        <BedIcon size={65} color={'rgba(0,0,0,.25)'} />
+    </PlaceholderContainer>
+);
+
 // -----------------------------------------------------------------------------
 // RoomList
 // -----------------------------------------------------------------------------
 
 const RoomList = ({ house }) => <GetRoomsForHouse id={house.id}>{renderRoomList}</GetRoomsForHouse>;
-
+/**
+ * Render function. Render a list of rooms.
+ *
+ * @param data the room list
+ * @param isLoading is the data loading?
+ * @param error if an error occurs when fetching the data
+ */
 const renderRoomList = (data, isLoading, error) => {
     if (data) {
+        if (data.length === 0) {
+            return (
+                <NoRooms>
+                    <div>This house doesn't have any available rooms.</div>
+                </NoRooms>
+            );
+        }
         return (
-            <div>
-                {data.map((r, i) => {
-                    return <div key={i}>{r.id}</div>;
-                })}
-            </div>
+            <Fragment>
+                {data.map((r, i) => (
+                    <RoomOverview room={r} key={i} alt={i % 2} />
+                ))}
+            </Fragment>
         );
     } else {
-        return <div>no data</div>;
+        return <div />;
     }
 };
+
+/**
+ * A component that indicates that there aren't any rooms.
+ */
+const NoRooms = styled.div`
+    padding: 15px;
+
+    display: flex;
+    height: 200px;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #666;
+    font-size: 20px;
+    font-family: 'Raleway', sans-serif;
+`;
+
+// -----------------------------------------------------------------------------
+// RoomOverview
+// -----------------------------------------------------------------------------
+
+/**
+ * A component that shows the overview of a room.
+ *
+ * @param room the room to show
+ * @param alt should this use the alternate color scheme?
+ */
+const RoomOverview = ({ room, alt }) => {
+    return (
+        <RoomOverviewContainer alt={alt}>
+            <RoomOverviewImage alt={alt} image={room.image} />
+            <RoomOverlayContentContainer>
+                <RoomOverlayContentName>{room.name ? room.name : 'unnamed room'}</RoomOverlayContentName>
+                {room.capacity ? (
+                    <RoomOverlayContentCapacity>{`${room.capacity} bed${room.capacity === 1 ? '' : 's'}`}</RoomOverlayContentCapacity>
+                ) : null}
+                <RoomOverlayContentDescription>{room.description}</RoomOverlayContentDescription>
+            </RoomOverlayContentContainer>
+        </RoomOverviewContainer>
+    );
+};
+
+/**
+ * A container component for the room overview.
+ */
+const RoomOverviewContainer = styled.div`
+    padding: 10px;
+    background: ${props => (props.alt ? '#eee' : 'white')};
+    display: flex;
+`;
+
+/**
+ * Renders an image for a room, or a placeholder image.
+ *
+ * @param image the image, might be null
+ * @param alt should this use the alternate color scheme?
+ */
+const RoomOverviewImage = ({ image, alt }) => {
+    const content = image ? <RoomOverviewImageFrame image={image} /> : <PlaceholderRoom />;
+    return <RoomOverviewImageContainer alt={alt}>{content}</RoomOverviewImageContainer>;
+};
+
+/**
+ * A container component for the room overview image.
+ */
+const RoomOverviewImageContainer = styled.div`
+    margin: 10px;
+    padding: 10px;
+    height: 225px;
+    width: 350px;
+
+    background: ${props => (props.alt ? 'white' : '#eee')};
+`;
+
+/**
+ * A component that displays the room image.
+ */
+const RoomOverviewImageFrame = styled.div`
+    background: url('${props => props.image}');
+`;
+
+/**
+ * A container component for the room overview content (name, description, etc).
+ */
+const RoomOverlayContentContainer = styled.div`
+    margin: 10px;
+    padding: 10px;
+`;
+
+/**
+ * A styled div for the room overview name.
+ */
+const RoomOverlayContentName = styled.div`
+    color: #333;
+    font-size: 20px;
+    font-family: 'Arvo', sans-serif;
+    font-weight: bold;
+`;
+
+/**
+ * A styled div for the room overview description.
+ */
+const RoomOverlayContentDescription = styled.div`
+    margin-top: 20px;
+    color: #666;
+    font-size: 18px;
+    font-family: 'Raleway', sans-serif;
+`;
+
+/**
+ * A styled div for the room overview capacity.
+ */
+const RoomOverlayContentCapacity = styled.div`
+    color: #666;
+    font-size: 18px;
+    font-family: 'Raleway', sans-serif;
+`;
