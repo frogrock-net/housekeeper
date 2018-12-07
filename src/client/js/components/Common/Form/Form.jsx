@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
+import SubmitButton from './SubmitButton';
+import FormInput from './FormInput';
 
 /**
  * Props supported by the Form component.
@@ -21,6 +23,24 @@ type Props = {
  */
 type State = {
     [string]: any,
+};
+
+/**
+ * Determine whether a child component is a Form component (and should get isUpdate injected into it).
+ *
+ * @param component the component
+ * @returns true if the child component is a Form component.
+ */
+const isFormChild = component => {
+    if (component.target) {
+        return isFormChild(component.target);
+    }
+
+    if (!component.defaultProps) {
+        return false;
+    }
+
+    return component.defaultProps.isFormComponent;
 };
 
 /**
@@ -69,10 +89,14 @@ export default class Form extends React.Component<Props, State> {
             <FormContainer className={this.props.className}>
                 <form onSubmit={this.onSubmit}>
                     {React.Children.map(this.props.children, child => {
-                        return React.cloneElement(child, {
-                            onUpdate: this.onUpdate,
-                            value: this.state[child.props.fieldName],
-                        });
+                        if (isFormChild(child.type)) {
+                            return React.cloneElement(child, {
+                                onUpdate: this.onUpdate,
+                                value: this.state[child.props.fieldName],
+                            });
+                        } else {
+                            return child;
+                        }
                     })}
                 </form>
             </FormContainer>

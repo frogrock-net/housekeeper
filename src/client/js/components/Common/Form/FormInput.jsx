@@ -56,6 +56,7 @@ export default class FormInput extends React.Component<Props, State> {
         defaultColor: '#999',
         errorColor: '#a74343',
         type: 'text',
+        isFormComponent: true,
     };
 
     state = {
@@ -160,6 +161,8 @@ const StyledInput = styled.input.attrs({
     border-right: none;
 
     width: 100%;
+
+    font-family: 'Raleway', sans-serif;
 
     background-color: transparent;
     -webkit-tap-highlight-color: transparent;

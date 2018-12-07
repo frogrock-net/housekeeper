@@ -15,6 +15,7 @@ import { StateContext } from '../app';
 export type House = {
     id: string,
     name: string,
+    description: ?string,
 
     address: {
         street: ?string,
@@ -42,17 +43,20 @@ export type House = {
  * GraphQL query mutation. Create a house.
  */
 const CREATE = gql`
-    mutation Create($name: String!, $street: String, $city: String, $state: String, $zip: String) {
-        createHouse(name: $name, street: $street, city: $city, state: $state, zip: $zip) {
+    mutation Create($name: String!, $description: String, $street: String, $city: String, $state: String, $zip: String) {
+        createHouse(name: $name, description: $description, street: $street, city: $city, state: $state, zip: $zip) {
             id
+            name
+            description
+
             address {
                 street
                 city
                 state
                 zip
             }
+
             administrators
-            name
         }
     }
 `;
@@ -62,6 +66,7 @@ const CREATE = gql`
  */
 type CreateHouseRequest = {
     name: string,
+    description?: string,
     street?: string,
     city?: string,
     state?: string,
@@ -76,7 +81,7 @@ type CreateHouseSubmit = CreateHouseRequest => void;
 /**
  * The type signature for the render prop for the CreateHouse component.
  */
-type CreateHouseRender = (onSubmit: CreateHouseSubmit, isLoading: boolean, error: ?Error) => React.Node;
+type CreateHouseRender = (onSubmit: CreateHouseSubmit, isLoading: boolean, error: ?Error, data: ?House) => React.Node;
 
 /**
  * Props expected by the CreateHouse component.
@@ -95,25 +100,38 @@ type CreateHouseProps = {
  * @constructor
  */
 export const CreateHouse = ({ children }: CreateHouseProps) => {
-    const create = (mutate, { error, loading }, render) => {
+    const create = (mutate, e, render) => {
+        const { error, data, loading } = e;
+
         const f = data => {
-            console.log(data);
             mutate({ variables: data });
         };
 
-        return <Fragment>{render(f, loading, error)}</Fragment>;
+        return <Fragment>{render(f, loading, error, data ? data.createHouse : null)}</Fragment>;
     };
     const wrapper = (mutate, data) => create(mutate, data, children);
 
-    const update = (cache, e) => {
-        console.log('in update');
-        console.log(e);
+    const update = (cache, e, state) => {
+        const query = {
+            query: LIST_OWNED_HOUSES,
+            variables: {
+                administratorId: state.auth._id,
+            },
+        };
+        const house = e.data.createHouse;
+        const data = cache.readQuery(query);
+        data.housesByAdministrator.push(house);
+        cache.writeQuery({ ...query, data });
     };
 
     return (
-        <Mutation mutation={CREATE} update={update}>
-            {wrapper}
-        </Mutation>
+        <StateContext.Consumer>
+            {state => (
+                <Mutation mutation={CREATE} update={(cache, e) => update(cache, e, state)}>
+                    {wrapper}
+                </Mutation>
+            )}
+        </StateContext.Consumer>
     );
 };
 
@@ -166,6 +184,7 @@ const GET_HOUSE = gql`
         getHouse(houseId: $houseId) {
             id
             name
+            description
 
             address {
                 city

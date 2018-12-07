@@ -15,6 +15,7 @@ const typeDefs = `
         address: Address
         administrators: [String]
         name: String
+        description: String
     }
 
     extend type Query {
@@ -25,9 +26,9 @@ const typeDefs = `
 
     extend type Mutation {
         addAdministratorToHouse(administratorId: ID!, houseId: ID!): House,
-        createHouse(name: String!, street: String, city: String, state: String, zip: String): House,
+        createHouse(name: String!, description: String, street: String, city: String, state: String, zip: String): House,
         deleteHouse(houseId: ID!): House,
-        updateHouse(houseId: ID!, name: String, street: String, city: String, state: String, zip: String): House,
+        updateHouse(houseId: ID!, name: String, description: String, street: String, city: String, state: String, zip: String): House,
     }
 `;
 

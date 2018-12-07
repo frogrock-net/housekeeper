@@ -112,7 +112,7 @@ export const ErrorIcon = (props: Props) => (
 );
 
 /**
- * An 'bed' icon.
+ * A 'bed' icon.
  *
  * It looks like a person sleeping in a bed.
  *
@@ -124,3 +124,12 @@ export const BedIcon = (props: Props) => (
         path={'M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z'}
     />
 );
+
+/**
+ * A 'notes' icon.
+ *
+ * It looks like a bunch of horizontal lines, kind of like a paragraph.
+ *
+ * @constructor
+ */
+export const NotesIcon = (props: Props) => <Icon {...props} path={'M3 18h12v-2H3v2zM3 6v2h18V6H3zm0 7h18v-2H3v2z'} />;

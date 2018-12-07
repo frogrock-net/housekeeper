@@ -79,7 +79,7 @@ const Container = styled.div`
 `;
 
 /**
- * A 50px header.
+ * Another container for the ViewHouse component.
  */
 const InnerContainer = styled.div`
     background: white;

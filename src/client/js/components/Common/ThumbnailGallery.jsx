@@ -15,6 +15,8 @@ type Props = {
 /**
  * A ThumbnailGallery component.
  *
+ * TODO: this.
+ *
  * @param props the props, described above.
  */
 const ThumbnailGallery = (props: Props) => {
