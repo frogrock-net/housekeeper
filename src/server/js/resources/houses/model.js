@@ -53,7 +53,7 @@ const endpoints = {
     getHousesByMember: memberId => HouseModel.find({ members: memberId }).exec(),
 
     update: (house, fieldsToUpdate) => {
-        const allowedFlatFields = ['administrators', 'members', 'name'];
+        const allowedFlatFields = ['administrators', 'description', 'members', 'name'];
         map(allowedFlatFields, field => {
             const newValue = fieldsToUpdate[field];
             if (!isUndefined(newValue)) {
@@ -67,8 +67,6 @@ const endpoints = {
                 house.address[addressField] = fieldsToUpdate[addressField];
             }
         });
-
-        house.description = fields.description;
 
         return house.save();
     },

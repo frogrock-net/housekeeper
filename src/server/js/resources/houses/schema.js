@@ -1,6 +1,7 @@
 import { concat, filter, isEmpty, reject } from 'lodash';
 
 import HouseModel from './model';
+import UserModel from '../users/model';
 
 const typeDefs = `
     type Address {
@@ -62,9 +63,17 @@ const resolvers = {
         addMemberToHouse: async (_, args, context) => {
             const house = await HouseModel.get(args.houseId);
             verifyIsAdmin(context.jwt, house, 'Only administrators can add members to a house.');
+            const user = await UserModel.get(args.memberId);
+            if (!user) {
+                throw new Error('Cannot find the user!');
+            }
 
-            const members = concat(house.members, args.memberId);
-            return HouseModel.update(house, { members });
+            if (!house.members.find(member => member == args.memberId)) {
+                const members = concat(house.members, args.memberId);
+                return HouseModel.update(house, { members });
+            }
+
+            return house;
         },
 
         createHouse: (_, args, context) => {
