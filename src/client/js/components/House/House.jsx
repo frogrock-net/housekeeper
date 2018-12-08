@@ -1,22 +1,57 @@
-import gql from 'graphql-tag';
+// @flow
 import * as React from 'react';
 import { Fragment } from 'react';
+import type { RouterProps } from '../../util/types';
+import { Route, Switch } from 'react-router-dom';
+import ViewHouse from './ViewHouse';
+import { ListOwnedHouses } from '../../state/house';
+import { ROUTE_HOUSE_CREATE, ROUTE_HOUSE_VIEW } from '../../util/routes';
+import HouseHeader from './HouseHeader';
+import CreateHouse from './CreateHouse';
 
 /**
- * Get all houses for a given administratorId.
+ * Router for 'house' pages (hk/house).
+ *
+ * Currently supports two routes:
+ * - /create - the CreateHouse component
+ * - /:id - the ViewHouse component for the provided id
  */
-const GET_HOUSES = gql`
-    {
-        query GetHouses($administratorId: String) {
-            housesByAdministrator(administratorId: $$administratorId) {
-                id
-                name
-            }
-        }
-    }
-`;
+const House = () => (
+    <Switch>
+        <Route exact path={ROUTE_HOUSE_CREATE} render={renderCreate} />
+        <Route path={ROUTE_HOUSE_VIEW} render={renderView} />
+    </Switch>
+);
 
 /**
- * I'm not really sure what's going on here yet.
+ * A render function for the CreateHouse page.
  */
-const GetHouses = () => {};
+const renderCreate = () => (
+    <Fragment>
+        <Header selected={'create'} />
+        <CreateHouse />
+    </Fragment>
+);
+
+/**
+ * A render function for the ViewHouse page.
+ */
+const renderView = (props: RouterProps) => (
+    <Fragment>
+        <Header selected={props.match.params.id} />
+        <ViewHouse id={props.match.params.id} />
+    </Fragment>
+);
+
+/**
+ * The header for the house pages.
+ *
+ * @param selected the currently selected header element
+ */
+const Header = ({ selected }) => (
+    <ListOwnedHouses>
+        {(data, isLoading, error) => <HouseHeader data={data} isLoading={isLoading} error={error} selected={selected} />}
+    </ListOwnedHouses>
+);
+
+export default House;

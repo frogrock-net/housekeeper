@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
+import SubmitButton from './SubmitButton';
+import FormInput from './FormInput';
 
 /**
  * Props supported by the Form component.
@@ -24,6 +26,26 @@ type State = {
 };
 
 /**
+ * Determine whether a child component is a Form component (and should get onUpdate injected into it).
+ *
+ * @param component the component
+ * @returns true if the child component is a Form component.
+ */
+const isFormChild = component => {
+    // when component is a styled component, the 'target' is the original component
+    if (component.target) {
+        return isFormChild(component.target);
+    }
+
+    // a form child component should have the 'isFormComponent' default prop.
+    if (!component.defaultProps) {
+        return false;
+    }
+
+    return component.defaultProps.isFormComponent;
+};
+
+/**
  * The Form component.
  *
  * Manages child FormInput and SubmitButton components.
@@ -34,12 +56,7 @@ export default class Form extends React.Component<Props, State> {
      */
     constructor(props: Props) {
         super(props);
-
-        if (props.defaultValues) {
-            this.state = props.defaultValues;
-        } else {
-            this.state = {};
-        }
+        this.state = props.defaultValues || {};
     }
 
     /**
@@ -74,10 +91,14 @@ export default class Form extends React.Component<Props, State> {
             <FormContainer className={this.props.className}>
                 <form onSubmit={this.onSubmit}>
                     {React.Children.map(this.props.children, child => {
-                        return React.cloneElement(child, {
-                            onUpdate: this.onUpdate.bind(this),
-                            value: this.state[child.props.fieldName],
-                        });
+                        if (isFormChild(child.type)) {
+                            return React.cloneElement(child, {
+                                onUpdate: this.onUpdate,
+                                value: this.state[child.props.fieldName],
+                            });
+                        } else {
+                            return child;
+                        }
                     })}
                 </form>
             </FormContainer>

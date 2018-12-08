@@ -30,6 +30,7 @@ const HouseSchema = new mongoose.Schema({
         },
     ],
     name: { type: String, required: true },
+    description: String,
 });
 
 const HouseModel = mongoose.model('HouseModel', HouseSchema);
@@ -66,6 +67,8 @@ const endpoints = {
                 house.address[addressField] = fieldsToUpdate[addressField];
             }
         });
+
+        house.description = fields.description;
 
         return house.save();
     },

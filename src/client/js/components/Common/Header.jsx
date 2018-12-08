@@ -4,6 +4,7 @@ import { Fragment } from 'react';
 import { Logout } from '../../state/auth';
 import styled from 'styled-components';
 import Logo from './Logo';
+import { Link } from 'react-router-dom';
 
 /**
  * Inject the 'auth' state into the Header component.
@@ -18,7 +19,9 @@ const Header = props => <StateContext.Consumer>{state => <HeaderComponent {...pr
 const HeaderComponent = props => (
     <Fragment>
         <Container>
-            <Logo color={'white'} size={45} />
+            <Link to={'/'}>
+                <Logo color={'white'} size={45} />
+            </Link>
             <Logout>{logout => <button onClick={logout}>Log out</button>}</Logout>
         </Container>
     </Fragment>

@@ -16,9 +16,11 @@ const typeDefs = `
         administrators: [String]
         members: [String]
         name: String
+        description: String
     }
 
     extend type Query {
+        getHouse(houseId: ID!): House,
         allHouses: [House],
         housesByAdministrator(administratorId: ID!): [House],
         housesByMember(memberId: ID!): [House],
@@ -27,10 +29,10 @@ const typeDefs = `
     extend type Mutation {
         addAdministratorToHouse(administratorId: ID!, houseId: ID!): House,
         addMemberToHouse(memberId:ID!, houseId: ID!): House,
-        createHouse(name: String!, street: String, city: String, state: String, zip: String): House,
+        createHouse(name: String!, description: String, street: String, city: String, state: String, zip: String): House,
         deleteHouse(houseId: ID!): House,
         removeMemberFromHouse(memberId: ID!, houseId: ID!): House,
-        updateHouse(houseId: ID!, name: String, street: String, city: String, state: String, zip: String): House,
+        updateHouse(houseId: ID!, name: String, description: String, street: String, city: String, state: String, zip: String): House,
     }
 `;
 
@@ -42,6 +44,7 @@ const verifyIsAdmin = (jwt, house, errMsg) => {
 
 const resolvers = {
     Query: {
+        getHouse: (root, args, context, info) => HouseModel.get(args.houseId),
         allHouses: (root, args, context, info) => HouseModel.getAll(),
         housesByAdministrator: (root, args, context, info) => HouseModel.getHousesByAdministrator(args.administratorId),
         housesByMember: (_, args) => HouseModel.getHousesByMember(args.memberId),
