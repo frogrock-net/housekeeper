@@ -27,15 +27,6 @@ const SubmitButton = (props: Props) => (
     </Button>
 );
 
-/**
- * Default props for the SubmitButton.
- *
- * Indicates that it's a valid form component.
- */
-SubmitButton.defaultProps = {
-    isFormComponent: true,
-};
-
 export default SubmitButton;
 
 /**

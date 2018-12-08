@@ -55,11 +55,7 @@ const renderCreateHouse = (onSubmit, isLoading, error, data) => {
     }
 
     return (
-        <StyledForm
-            onSubmit={form => {
-                onSubmit(form);
-            }}
-        >
+        <StyledForm onSubmit={onSubmit}>
             <Title>Describe your house</Title>
             <StyledFormInput placeholder={'Name'} error={false} fieldName={'name'} icon={HouseIcon} />
             <StyledFormInput placeholder={'Description'} error={false} fieldName={'description'} icon={NotesIcon} />

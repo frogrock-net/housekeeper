@@ -234,7 +234,7 @@ const renderRoomList = (data, isLoading, error) => {
         return (
             <Fragment>
                 {data.map((r, i) => (
-                    <RoomOverview room={r} key={i} alt={i % 2} />
+                    <RoomOverview room={r} key={i} alternateColor={i % 2} />
                 ))}
             </Fragment>
         );
@@ -268,12 +268,12 @@ const NoRooms = styled.div`
  * A component that shows the overview of a room.
  *
  * @param room the room to show
- * @param alt should this use the alternate color scheme?
+ * @param alternateColor should this use the alternate color scheme?
  */
-const RoomOverview = ({ room, alt }) => {
+const RoomOverview = ({ room, alternateColor }) => {
     return (
-        <RoomOverviewContainer alt={alt}>
-            <RoomOverviewImage alt={alt} image={room.image} />
+        <RoomOverviewContainer alternateColor={alternateColor}>
+            <RoomOverviewImage alternateColor={alternateColor} image={room.image} />
             <RoomOverlayContentContainer>
                 <RoomOverlayContentName>{room.name ? room.name : 'unnamed room'}</RoomOverlayContentName>
                 {room.capacity ? (
@@ -290,7 +290,7 @@ const RoomOverview = ({ room, alt }) => {
  */
 const RoomOverviewContainer = styled.div`
     padding: 10px;
-    background: ${props => (props.alt ? '#eee' : 'white')};
+    background: ${props => (props.alternateColor ? '#eee' : 'white')};
     display: flex;
 `;
 
@@ -298,11 +298,11 @@ const RoomOverviewContainer = styled.div`
  * Renders an image for a room, or a placeholder image.
  *
  * @param image the image, might be null
- * @param alt should this use the alternate color scheme?
+ * @param alternateColor should this use the alternate color scheme?
  */
-const RoomOverviewImage = ({ image, alt }) => {
+const RoomOverviewImage = ({ image, alternateColor }) => {
     const content = image ? <RoomOverviewImageFrame image={image} /> : <PlaceholderRoom />;
-    return <RoomOverviewImageContainer alt={alt}>{content}</RoomOverviewImageContainer>;
+    return <RoomOverviewImageContainer alternateColor={alternateColor}>{content}</RoomOverviewImageContainer>;
 };
 
 /**
@@ -314,7 +314,7 @@ const RoomOverviewImageContainer = styled.div`
     height: 225px;
     width: 350px;
 
-    background: ${props => (props.alt ? 'white' : '#eee')};
+    background: ${props => (props.alternateColor ? 'white' : '#eee')};
 `;
 
 /**

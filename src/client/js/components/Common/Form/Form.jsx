@@ -26,16 +26,18 @@ type State = {
 };
 
 /**
- * Determine whether a child component is a Form component (and should get isUpdate injected into it).
+ * Determine whether a child component is a Form component (and should get onUpdate injected into it).
  *
  * @param component the component
  * @returns true if the child component is a Form component.
  */
 const isFormChild = component => {
+    // when component is a styled component, the 'target' is the original component
     if (component.target) {
         return isFormChild(component.target);
     }
 
+    // a form child component should have the 'isFormComponent' default prop.
     if (!component.defaultProps) {
         return false;
     }

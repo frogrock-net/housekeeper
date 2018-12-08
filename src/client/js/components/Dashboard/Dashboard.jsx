@@ -27,7 +27,12 @@ const DashboardRouter = props => (
     </Fragment>
 );
 
-const SIHP = (props: RouterProps) => (
+/**
+ * A signed-in-home-page component.
+ *
+ * It's a work in progress.
+ */
+const SIHP = () => (
     <ContentContainer>
         <Content>
             <ListOwnedHouses>{(data, isLoading, error) => <HouseHeader data={data} isLoading={isLoading} error={error} />}</ListOwnedHouses>
