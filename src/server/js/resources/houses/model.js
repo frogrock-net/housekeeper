@@ -22,6 +22,13 @@ const HouseSchema = new mongoose.Schema({
             required: true,
         },
     ],
+    members: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'UserModel',
+            default: [],
+        },
+    ],
     name: { type: String, required: true },
     description: String,
 });
@@ -43,23 +50,23 @@ const endpoints = {
 
     getHousesByAdministrator: adminId => HouseModel.find({ administrators: adminId }).exec(),
 
-    update: (house, fields) => {
-        if (!isUndefined(fields.administrators)) {
-            house.administrators = fields.administrators;
-        }
+    getHousesByMember: memberId => HouseModel.find({ members: memberId }).exec(),
 
-        if (!isUndefined(fields.name)) {
-            house.name = fields.name;
-        }
-
-        const addressFields = ['street', 'city', 'state', 'zip'];
-        map(addressFields, addressField => {
-            if (!isUndefined(fields[addressField])) {
-                house.address[addressField] = fields[addressField];
+    update: (house, fieldsToUpdate) => {
+        const allowedFlatFields = ['administrators', 'description', 'members', 'name'];
+        map(allowedFlatFields, field => {
+            const newValue = fieldsToUpdate[field];
+            if (!isUndefined(newValue)) {
+                house[field] = newValue;
             }
         });
 
-        house.description = fields.description;
+        const addressFields = ['street', 'city', 'state', 'zip'];
+        map(addressFields, addressField => {
+            if (!isUndefined(fieldsToUpdate[addressField])) {
+                house.address[addressField] = fieldsToUpdate[addressField];
+            }
+        });
 
         return house.save();
     },

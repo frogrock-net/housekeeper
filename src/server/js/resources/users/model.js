@@ -46,6 +46,8 @@ UserSchema.methods.generateToken = function() {
 const UserModel = mongoose.model('UserModel', UserSchema);
 
 const endpoints = {
+    get: id => UserModel.findById(id).exec(),
+
     getAll: () => {
         return UserModel.find().exec();
     },
