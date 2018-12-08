@@ -56,13 +56,23 @@ const resolvers = {
             const house = await HouseModel.get(args.houseId);
             verifyIsAdmin(context.jwt, house, 'Only administrators can add administrators to a house!');
 
-            const administrators = concat(house.administrators, args.administratorId);
-            return HouseModel.update(house, { administrators });
+            const admin = await UserModel.get(args.administratorId);
+            if (!admin) {
+                throw new Error('Cannot find the user!');
+            }
+
+            if (!house.administrators.find(admin => admin == args.administratorId)) {
+                const administrators = concat(house.administrators, args.administratorId);
+                return HouseModel.update(house, { administrators });
+            }
+
+            return house;
         },
 
         addMemberToHouse: async (_, args, context) => {
             const house = await HouseModel.get(args.houseId);
             verifyIsAdmin(context.jwt, house, 'Only administrators can add members to a house.');
+
             const user = await UserModel.get(args.memberId);
             if (!user) {
                 throw new Error('Cannot find the user!');
