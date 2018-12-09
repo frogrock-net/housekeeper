@@ -6,6 +6,7 @@ import { AddIcon, ErrorIcon, HouseIcon } from '../Common/Icon';
 import { Link } from 'react-router-dom';
 import { ROUTE_HOUSE, ROUTE_HOUSE_CREATE } from '../../util/routes';
 import Loading from '../Common/Loading';
+import theme from '../../util/theme';
 
 /**
  * Type defining the props accepted by the HouseHeader component.
@@ -50,7 +51,7 @@ const HouseHeader = (props: Props) => {
 
     if (props.error) {
         return (
-            <Container color={'#ad6f6f'} className={props.className}>
+            <Container color={theme.color.error} className={props.className}>
                 <ErrorHouseCard />
             </Container>
         );
@@ -81,8 +82,8 @@ const HouseHeader = (props: Props) => {
  * selectedColor - a darker blue
  */
 HouseHeader.defaultProps = {
-    color: '#b3d3e2',
-    selectedColor: '#65727b',
+    color: theme.color.lightBackground,
+    selectedColor: theme.color.darkBackground,
 };
 
 export default HouseHeader;
@@ -95,7 +96,6 @@ const Container = styled.div`
     background: ${props => props.color};
     display: flex;
 
-    display: flex;
     justify-content: center;
 
     overflow-x: auto;
@@ -134,7 +134,7 @@ type HouseCardProps = {
 const HouseCard = (props: HouseCardProps) => (
     <HouseCardContainer color={props.isSelected ? props.selectedColor : props.color}>
         <Link to={`${ROUTE_HOUSE}/${props.house.id}`}>
-            <CardBorder color={props.isSelected ? props.selectedColor : '#666'}>
+            <CardBorder color={props.isSelected ? props.selectedColor : theme.color.darkGrey}>
                 <CardContainer>
                     <CardImage house={props.house} />
                     <CardName>{props.house.name}</CardName>
@@ -207,7 +207,7 @@ const CardName = styled.div`
  * @param house the house
  */
 const CardImage = ({ house }) => {
-    const color = house && house.icon ? house.icon.color || 'white' : 'white';
+    const color = house && house.icon ? house.icon.color || theme.color.white : theme.color.white;
     const image = house && house.icon && house.icon.image ? <Image image={house.icon.image} /> : <Placeholder color={color} />;
     return <CardImageContainer color={color}>{image}</CardImageContainer>;
 };
@@ -238,7 +238,7 @@ const CardImageContainer = styled.div`
  */
 const Placeholder = () => (
     <PlaceholderContainer>
-        <HouseIcon size={65} color={'rgba(0,0,0,.25)'} />
+        <HouseIcon size={65} color={theme.color.transparentGrey} />
     </PlaceholderContainer>
 );
 
@@ -266,11 +266,11 @@ const PlaceholderContainer = styled.div`
 const CreateHouseCard = ({ isSelected, color, selectedColor }) => (
     <HouseCardContainer color={isSelected ? selectedColor : color}>
         <Link to={`${ROUTE_HOUSE_CREATE}`}>
-            <CardBorder color={isSelected ? selectedColor : '#666'}>
+            <CardBorder color={isSelected ? selectedColor : theme.color.darkGrey}>
                 <CardContainer>
                     <CardImageContainer>
                         <PlaceholderContainer>
-                            <AddIcon size={65} color={'#eee'} />
+                            <AddIcon size={65} color={theme.color.lightGrey} />
                         </PlaceholderContainer>
                     </CardImageContainer>
                     <CardName>Add a house</CardName>
@@ -289,7 +289,7 @@ const CreateHouseCard = ({ isSelected, color, selectedColor }) => (
  */
 const LoadingHouseCard = () => (
     <HouseCardContainer>
-        <CardBorder color={'#666'}>
+        <CardBorder color={theme.color.darkGrey}>
             <CardContainer>
                 <PlaceholderContainer>
                     <Loading />
@@ -312,7 +312,7 @@ const ErrorHouseCard = () => (
             <CardContainer>
                 <CardImageContainer>
                     <PlaceholderContainer>
-                        <ErrorIcon size={65} color={'white'} />
+                        <ErrorIcon size={65} color={theme.color.white} />
                     </PlaceholderContainer>
                 </CardImageContainer>
                 <CardName>An error occurred.</CardName>

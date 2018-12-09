@@ -5,6 +5,7 @@ import { Logout } from '../../state/auth';
 import styled from 'styled-components';
 import Logo from './Logo';
 import { Link } from 'react-router-dom';
+import theme from '../../util/theme';
 
 /**
  * Inject the 'auth' state into the Header component.
@@ -20,7 +21,7 @@ const HeaderComponent = props => (
     <Fragment>
         <Container>
             <Link to={'/'}>
-                <Logo color={'white'} size={45} />
+                <Logo color={theme.color.white} size={45} />
             </Link>
             <Logout>{logout => <button onClick={logout}>Log out</button>}</Logout>
         </Container>
@@ -32,7 +33,7 @@ const HeaderComponent = props => (
  */
 const Container = styled.div`
     height: 50px;
-    background: #444;
+    background: ${theme.color.darkerGrey};
     display: flex;
     justify-content: space-between;
 `;
