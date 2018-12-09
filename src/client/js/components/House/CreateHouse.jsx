@@ -73,8 +73,11 @@ const renderCreateHouse = (onSubmit, isLoading, error, data) => {
 /**
  * A styled container div for the CreateHouse component.
  */
-const Container = styled(BorderedContainer)`
+const Container = styled(BorderedContainer).attrs({
+    spacing: 0,
+})`
     min-height: calc(100% - 350px);
+    padding: 15px;
 `;
 
 /**
