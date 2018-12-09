@@ -8,6 +8,7 @@ import House from '../House/House';
 import { ROUTE_HOUSE, ROUTE_HOUSEKEEPER } from '../../util/routes';
 import { ListOwnedHouses } from '../../state/house';
 import HouseHeader from '../House/HouseHeader';
+import theme from '../../util/theme';
 
 /**
  * An extremely-WIP dashboard component.
@@ -47,7 +48,12 @@ export default Dashboard;
  */
 const ContentContainer = styled.div`
     height: calc(100vh - 100px);
-    background: linear-gradient(#444, #b3d3e2 35%, #b3d3e2 75%, #ffeab0 95%);
+    background: linear-gradient(
+        ${theme.color.darkerGrey},
+        ${theme.color.lightBackground} 35%,
+        ${theme.color.lightBackground} 75%,
+        ${theme.color.lightAlternate} 95%
+    );
 `;
 
 /**
@@ -65,5 +71,5 @@ const Content = styled.div`
  */
 const Footer = styled.div`
     height: 50px;
-    background: #ffeab0;
+    background: ${theme.color.lightAlternate};
 `;

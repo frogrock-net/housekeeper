@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
-import SubmitButton from './SubmitButton';
-import FormInput from './FormInput';
+import theme from '../../../util/theme';
 
 /**
  * Props supported by the Form component.
@@ -110,7 +109,7 @@ export default class Form extends React.Component<Props, State> {
  * A styled container div for this Form component.
  */
 const FormContainer = styled.div`
-    background-color: #fff;
+    background-color: ${theme.color.white};
     padding: 15px 35px 25px 35px;
 
     form {
