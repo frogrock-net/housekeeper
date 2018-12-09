@@ -8,6 +8,7 @@ import Loading from '../Common/Loading';
 import { BedIcon, ErrorIcon, HouseIcon } from '../Common/Icon';
 import ThumbnailGallery from '../Common/ThumbnailGallery';
 import { GetRoomsForHouse } from '../../state/rooms';
+import BorderedContainer from '../Common/BorderedContainer';
 
 /**
  * The props accepted by the ViewHouse component.
@@ -56,11 +57,9 @@ const renderViewHouse = (data, isLoading, error) => {
 
     return (
         <Container>
-            <InnerContainer>
-                <Banner house={data} />
-                <ThumbnailGallery images={data.images} />
-                <RoomList house={data} />
-            </InnerContainer>
+            <Banner house={data} />
+            <ThumbnailGallery images={data.images} />
+            <RoomList house={data} />
         </Container>
     );
 };
@@ -70,28 +69,16 @@ export default ViewHouse;
 /**
  * A container for the ViewHouse component that takes up the rest of the screen.
  */
-const Container = styled.div`
-    background: #65727b;
-    display: flex;
-    padding: 15px;
-
+const Container = styled(BorderedContainer)`
     min-height: calc(100% - 350px);
+    display: flex;
 `;
 
 /**
- * Another container for the ViewHouse component.
+ * A container for the ViewHouse error/loading components that centers the contents.
  */
-const InnerContainer = styled.div`
-    background: white;
-    padding: 10px;
-    width: 100%;
-    margin: 0px auto;
-`;
-
-/**
- * A container for the ViewHouse error/loading components that extends InnerContainer and centers the contents.
- */
-const CenteredContainer = styled(InnerContainer)`
+const CenteredContainer = styled.div`
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

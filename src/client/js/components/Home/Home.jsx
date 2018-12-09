@@ -6,6 +6,7 @@ import Login from './Login';
 import { Redirect } from 'react-router-dom';
 import { StateContext } from '../../app';
 import { ROUTE_HOUSEKEEPER } from '../../util/routes';
+import theme from '../../util/theme';
 
 /**
  * Component that renders the home page.
@@ -27,7 +28,6 @@ const Home = () => (
         <Footer />
     </Background>
 );
-
 /**
  * The background.
  */
@@ -42,7 +42,7 @@ const Background = styled.div`
  */
 const Header = styled.div`
     height: 50px;
-    background: #444;
+    background: ${theme.color.darkerGrey};
 `;
 
 /**
@@ -50,7 +50,12 @@ const Header = styled.div`
  */
 const Content = styled.div`
     height: calc(100vh - 100px);
-    background: linear-gradient(#444, #b3d3e2 50%, #ffeab0 85%);
+    background: linear-gradient(
+        ${theme.color.darkerGrey},
+        ${theme.color.lightBackground} 35%,
+        ${theme.color.lightBackground} 75%,
+        ${theme.color.lightAlternate} 95%
+    );
 `;
 
 const ContentContainer = styled.div`
@@ -62,7 +67,7 @@ const ContentContainer = styled.div`
  */
 const Footer = styled.div`
     height: 50px;
-    background: #ffeab0;
+    background: ${theme.color.lightAlternate};
 `;
 
 /**
@@ -71,6 +76,8 @@ const Footer = styled.div`
 const LogoContainer = styled.div`
     display: flex;
     justify-content: center;
+
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25));
 `;
 
 /**
@@ -79,6 +86,8 @@ const LogoContainer = styled.div`
 const LoginContainer = styled.div`
     display: flex;
     justify-content: center;
+
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25));
 `;
 
 export default Home;

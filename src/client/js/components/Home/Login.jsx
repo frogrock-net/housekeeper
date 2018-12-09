@@ -7,6 +7,8 @@ import { Email, Lock } from '../Common/Icon';
 import { Authenticate } from '../../state/auth';
 import { Redirect } from 'react-router-dom';
 import { ROUTE_HOUSEKEEPER } from '../../util/routes';
+import BorderedContainer from '../Common/BorderedContainer';
+import theme from '../../util/theme';
 
 /**
  * The login component.
@@ -39,24 +41,22 @@ export default Login;
 /**
  * A styled container div for the login component.
  */
-const LoginContainer = styled.div`
-    padding: 35px 7.5px 7.5px;
-    background-color: #fff;
+const LoginContainer = styled(BorderedContainer)`
     width: 450px;
+    display: flex;
     text-align: center;
-
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
 `;
 
 /**
  * A div that contains an instructional message for the user.
  */
 const LoginText = styled.div`
-    font-family: 'Raleway', sans-serif;
+    margin-top: 15px;
+
+    font-family: ${theme.font.content};
     font-size: 18px;
 
-    color: #555;
+    color: ${theme.color.darkerGrey};
 `;
 
 /**
