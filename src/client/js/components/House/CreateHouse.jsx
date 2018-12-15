@@ -64,7 +64,7 @@ const renderCreateHouse = (onSubmit, isLoading, error, data) => {
             <ShorterFormInput placeholder={'City'} error={false} fieldName={'city'} />
             <ShorterFormInput placeholder={'State'} error={false} fieldName={'state'} />
             <ShorterFormInput placeholder={'Zip'} error={false} fieldName={'zip'} />
-            <Title />
+            <Title>Add rooms</Title>
             <StyledSubmitButton>Save your house</StyledSubmitButton>
         </StyledForm>
     );

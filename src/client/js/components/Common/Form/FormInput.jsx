@@ -50,7 +50,7 @@ type State = {
  */
 export default class FormInput extends React.Component<Props, State> {
     static defaultProps = {
-        onUpdate: (val: any) => {},
+        onUpdate: (field: string, val: string) => {},
         value: '',
         size: 30,
         focusedColor: theme.color.darkBackground,
