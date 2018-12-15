@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Housekeeper } from './Icon';
+import theme from '../../util/theme';
 
 /**
  * Supported props for the Logo component.
@@ -30,7 +31,7 @@ const Logo = (props: Props) => (
  * The default props for the Logo component.
  */
 Logo.defaultProps = {
-    color: 'white',
+    color: theme.color.white,
     size: 36,
 };
 
@@ -47,13 +48,13 @@ const LogoContainer = styled.div`
 `;
 
 /**
- * A styled div for the 'Housekeeper' texf for the Logo component.
+ * A styled div for the 'Housekeeper' text for the Logo component.
  *
  * Adjusts based on the provided size prop.
  */
 const LogoText = styled.div`
     color: ${props => props.color};
-    font-family: 'Arvo', sans-serif;
+    font-family: ${theme.font.header};
     line-height: ${props => Math.round(props.size * 1.1)}px;
     font-size: ${props => Math.round(props.size * 1.1) / 2}px;
 `;

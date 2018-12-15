@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
+import theme from '../../../util/theme';
 
 /**
  * Defines the props that are supported by the FormInput component.
@@ -52,9 +53,9 @@ export default class FormInput extends React.Component<Props, State> {
         onUpdate: (val: any) => {},
         value: '',
         size: 30,
-        focusedColor: '#435e6e',
-        defaultColor: '#999',
-        errorColor: '#a74343',
+        focusedColor: theme.color.darkBackground,
+        defaultColor: theme.color.mediumGrey,
+        errorColor: theme.color.error,
         type: 'text',
         isFormComponent: true,
     };
@@ -134,7 +135,7 @@ const InputContainer = styled.div`
     align-items: center;
 
     input {
-        margin: 0px 10px;
+        margin: 0px ${theme.spacing.small}px;
         border-bottom: 1px ${props => props.color} solid;
         color: ${props => props.color} !important;
 
@@ -162,7 +163,7 @@ const StyledInput = styled.input.attrs({
 
     width: 100%;
 
-    font-family: 'Raleway', sans-serif;
+    font-family: ${theme.font.content};
 
     background-color: transparent;
     -webkit-tap-highlight-color: transparent;

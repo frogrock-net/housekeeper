@@ -9,15 +9,15 @@ import { CreateHouse as CreateHouseOperation } from '../../state/house';
 import { Redirect } from 'react-router-dom';
 import { ROUTE_HOUSE } from '../../util/routes';
 import Loading from '../Common/Loading';
+import BorderedContainer from '../Common/BorderedContainer';
+import theme from '../../util/theme';
 
 /**
  * A bare-bones, work-in-progress create house form.
  */
 const CreateHouse = () => (
     <Container>
-        <InnerContainer>
-            <CreateHouseOperation>{renderCreateHouse}</CreateHouseOperation>
-        </InnerContainer>
+        <CreateHouseOperation>{renderCreateHouse}</CreateHouseOperation>
     </Container>
 );
 
@@ -49,7 +49,7 @@ const renderCreateHouse = (onSubmit, isLoading, error, data) => {
     if (error) {
         return (
             <CenteredContainer>
-                <ErrorIcon size={65} color={'#ad6f6f'} />
+                <ErrorIcon size={65} color={theme.color.error} />
             </CenteredContainer>
         );
     }
@@ -73,50 +73,45 @@ const renderCreateHouse = (onSubmit, isLoading, error, data) => {
 /**
  * A styled container div for the CreateHouse component.
  */
-const Container = styled.div`
-    background: #65727b;
-    display: flex;
-    padding: 15px;
-
+const Container = styled(BorderedContainer).attrs({
+    spacing: 0,
+})`
     min-height: calc(100% - 350px);
-`;
-
-/**
- * An inner container div for the CreateHouse component.
- */
-const InnerContainer = styled.div`
-    background: white;
-    width: 100%;
+    padding: 15px;
 `;
 
 /**
  * A container for the error/loading components that extends InnerContainer and centers the contents.
  */
-const CenteredContainer = styled(InnerContainer)`
+const CenteredContainer = styled.div`
+    background: ${theme.color.white};
+
     display: flex;
     justify-content: center;
     align-items: center;
+
     height: 100%;
+    width: 100%;
 `;
 
 /**
  * A styled title div for the CreateHouse component.
  */
 const Title = styled.div`
-    background: #eee;
-    padding: 10px;
-    margin: 10px 0px;
+    background: ${theme.color.lightGrey};
+    padding: ${theme.spacing.small}px;
+    margin: ${theme.spacing.small}px 0px;
     height: 25px;
 
     width: 100%;
     text-align: center;
     font-size: 20px;
-    font-family: 'Arvo', sans-serif;
+    font-family: ${theme.font.header};
     font-weight: bold;
-    color: #333;
+    color: ${theme.color.darkerGrey};
 
     :first-child {
-        margin: 0px 0px 10px;
+        margin: 0px 0px ${theme.spacing.small}px;
     }
 `;
 
@@ -125,7 +120,7 @@ const Title = styled.div`
  */
 const StyledFormInput = styled(FormInput)`
     max-width: 650px;
-    margin: 15px auto;
+    margin: ${theme.spacing.medium}px auto;
 `;
 
 /**
@@ -133,7 +128,7 @@ const StyledFormInput = styled(FormInput)`
  */
 const ShorterFormInput = styled(FormInput)`
     max-width: 550px;
-    margin: 15px auto;
+    margin: ${theme.spacing.medium}px auto;
 `;
 
 /**
