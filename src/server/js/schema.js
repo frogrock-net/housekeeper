@@ -26,3 +26,16 @@ const schema = makeExecutableSchema({
 });
 
 export default schema;
+
+/*
+import { readdirSync, statSync } from 'fs';
+
+const dirs = p => readdirSync(p).filter(f => statSync(path.join(p, f)).isDirectory());
+
+
+dirs(`${__dirname}/resources`).forEach(dir => {
+    const api = require(`./resources/${dir}`).default;
+    console.log(`\tLoading API resource: ${dir}`);
+    app.use(`/api/${dir}`, api);
+});
+ */
