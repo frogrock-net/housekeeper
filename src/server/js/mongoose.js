@@ -1,9 +1,15 @@
 let mongoose = require('mongoose');
 
+// added to avoid an issue when dealing with mongoose ObjectId values in graphql
 mongoose.Types.ObjectId.prototype.valueOf = function() {
     return this.toString();
 };
 
+/**
+ * Connect to the database.
+ *
+ * @returns a promise that resolves into a mongoose connection object
+ */
 const connect = async () => {
     // determine which mongodb location we should connect to...
     let dbUrl;
@@ -18,8 +24,7 @@ const connect = async () => {
     }
 
     await mongoose.connect(
-        dbUrl,
-        // see dep warnings: https://mongoosejs.com/docs/deprecations.html
+        dbUrl, // see dep warnings: https://mongoosejs.com/docs/deprecations.html
         {
             useCreateIndex: true,
             useFindAndModify: false,
