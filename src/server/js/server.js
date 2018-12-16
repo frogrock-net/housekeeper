@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import cors from 'cors';
 import expressJwt from 'express-jwt';
-import { graphiqlExpress, graphqlExpress } from 'graphql-server-express';
+import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
 import path from 'path';
 import schema from './schema';
 import errorHandler from './error';
