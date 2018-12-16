@@ -8,17 +8,7 @@ import { readdirSync, statSync } from 'fs';
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import path from 'path';
 import schema from './schema';
-import storage from './storage';
 
-const upload = async filename => {
-    // const file = await storage.bucket('images').upload(filename, {
-    //     metadata: { cacheControl: 'public, max-age=31536000' },
-    // });
-    const file = await storage.bucket('images').getFiles();
-    console.log(file.name);
-};
-
-upload('/Users/alisa/Documents/housekeeper/IMG_8319.JPG');
 const PORT = process.env.PORT || '8080';
 
 const dirs = p => readdirSync(p).filter(f => statSync(path.join(p, f)).isDirectory());
