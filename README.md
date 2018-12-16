@@ -22,7 +22,7 @@ $ sudo chown -R `id -un` /data/db    # give the dir the right permissions
 
 ### Run Locally
 
--   `$ npm run devserver`
+-   `$ npm run dev`
 -   make sure you have the environment variables set: `JWT_SECRET`
 -   to use the graphql tool at /graphiql, will need 'mod header' chrome extension to add auth token
 
