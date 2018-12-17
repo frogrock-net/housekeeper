@@ -38,6 +38,7 @@ dirs(`${__dirname}/resources`).forEach(dir => {
         console.info(`✅ Loaded resolvers for resource: ${dir}.`);
     } catch (e) {
         console.error(`❌ Error: can't find 'resolvers' module in resource folder: ${dir}.`);
+        console.error(`\t- ${e.message}`);
     }
 });
 

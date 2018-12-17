@@ -68,7 +68,7 @@ export const userById = GQLQuery`
  * @param root the root resolver
  * @param args the arguments for this mutator
  * @param context the context object
- * @returns {*} a promise that resolves into the updated house
+ * @returns {*} a promise that resolves into the created user
  */
 export const createUser = GQLMutation`
     "Create a user."
@@ -85,7 +85,7 @@ export const createUser = GQLMutation`
  * @param root the root resolver
  * @param args the arguments for this mutator
  * @param context the context object
- * @returns {*} a promise that resolves into the updated house
+ * @returns {*} a promise that resolves into the auth object
  */
 export const loginUser = GQLMutation`
     "Authenticate a user."

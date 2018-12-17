@@ -67,7 +67,7 @@ class UserResource extends MongooseResource {
     /**
      * Construct the user resource class.
      *
-     * Inherits 'create', 'get', 'getAll', and 'delete' from the base MongooseResource class.
+     * Inherits 'get', 'getAll', and 'delete' from the base MongooseResource class.
      */
     constructor() {
         super(mongoose.model('UserModel', schema));
