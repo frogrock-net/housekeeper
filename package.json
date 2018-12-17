@@ -83,9 +83,6 @@
         "prod": "npm run build && node build/server/js/server.js",
         "start": "node build/server/js/server.js"
     },
-    "nodemonConfig": {
-        "delay": "500"
-    },
     "author": "alex & friends",
     "husky": {
         "hooks": {

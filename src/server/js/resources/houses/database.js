@@ -1,7 +1,7 @@
 // @flow
 import mongoose from 'mongoose';
 import validator from 'validator';
-import MongooseResource from '../mongoose_resource';
+import MongooseResource from '../resource';
 
 /**
  * The 'house' schema, as represented in MongoDB.

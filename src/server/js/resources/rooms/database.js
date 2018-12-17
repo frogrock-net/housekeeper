@@ -1,6 +1,6 @@
 // @flow
 import mongoose from 'mongoose';
-import MongooseResource from '../mongoose_resource';
+import MongooseResource from '../resource';
 
 /**
  * The 'room' schema, as represented in MongoDB.

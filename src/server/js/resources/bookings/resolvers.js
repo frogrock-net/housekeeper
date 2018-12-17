@@ -1,5 +1,5 @@
 // @flow
-import { GQLQuery, GQLType } from '../graphql_helpers';
+import { GQLQuery, GQLType } from '../gql';
 import { BOOKING_STATUSES } from '../../../../common/constants';
 import BookingResource from './database';
 // --------------------------

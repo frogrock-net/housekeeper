@@ -1,6 +1,6 @@
 // @flow
 import HouseResource from './database';
-import { GQLMutation, GQLQuery, GQLType } from '../graphql_helpers';
+import { GQLMutation, GQLQuery, GQLType } from '../gql';
 import UserResource from '../users/database';
 
 // --------------------------

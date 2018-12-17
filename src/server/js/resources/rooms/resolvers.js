@@ -1,5 +1,5 @@
 // @flow
-import { GQLMutation, GQLQuery, GQLType } from '../graphql_helpers';
+import { GQLMutation, GQLQuery, GQLType } from '../gql';
 import RoomResource from './database';
 import HouseResource from '../houses/database';
 

@@ -1,7 +1,7 @@
 import { ApolloServer } from 'apollo-server-express';
 import { readdirSync, statSync } from 'fs';
 import path from 'path';
-import { GQL_TYPE_MUTATION, GQL_TYPE_QUERY, GQL_TYPE_TYPEDEF } from './resources/graphql_helpers';
+import { GQL_TYPE_MUTATION, GQL_TYPE_QUERY, GQL_TYPE_TYPEDEF } from './resources/gql';
 
 const TYPES = {
     [GQL_TYPE_TYPEDEF]: [],
@@ -14,6 +14,13 @@ const RESOLVERS = {
     Mutation: {},
 };
 
+//
+// Iterate through each directory in the server/js/resources/ folder, looking for 'resolver.js' files.
+//
+// If found, pulls each exported function from the 'resolver.js' file and sorts them as a 'type', 'query', or 'mutation'.
+//
+// Uses these to build the GraphQL server.
+//
 const dirs = p => readdirSync(p).filter(f => statSync(path.join(p, f)).isDirectory());
 dirs(`${__dirname}/resources`).forEach(dir => {
     try {
@@ -42,8 +49,6 @@ dirs(`${__dirname}/resources`).forEach(dir => {
     }
 });
 
-// This base Query and Mutation types are meant to be extended in each model schema.
-// An empty Query/Mutation cannot be extended, need to use a fake empty field.
 const queryTypeDefs = `
     scalar DateTime
 
@@ -56,6 +61,9 @@ const queryTypeDefs = `
     }
 `;
 
+/**
+ * Create the ApolloServer from the dynamically-generated typeDefs, Queries, and Mutations.
+ */
 const schema = new ApolloServer({
     typeDefs: [...TYPES[GQL_TYPE_TYPEDEF], queryTypeDefs],
     resolvers: RESOLVERS,

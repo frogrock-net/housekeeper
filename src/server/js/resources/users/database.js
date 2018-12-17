@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import MongooseResource from '../mongoose_resource';
+import MongooseResource from '../resource';
 
 /**
  * The 'user' schema, as represented in MongoDB.
