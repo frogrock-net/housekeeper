@@ -1,6 +1,7 @@
+// @flow
 import HouseResource from './database';
 import { GQLMutation, GQLQuery, GQLType } from '../graphql_helpers';
-import UserModel from '../users/model';
+import UserResource from '../users/database';
 
 // --------------------------
 // typeDefs
@@ -125,9 +126,10 @@ export const createHouse = GQLMutation`
             state,
             zip,
         },
+        administrators: [jwt.id],
     };
 
-    return HouseResource.create(houseData, jwt.id);
+    return HouseResource.create(houseData);
 });
 
 /**
@@ -194,7 +196,7 @@ export const addAdministratorToHouse = GQLMutation`
     const house = await HouseResource.get(houseId);
     verifyIsAdmin(jwt, house, 'Only administrators can add administrators to a house!');
 
-    const admin = await UserModel.get(administratorId);
+    const admin = await UserResource.get(administratorId);
     if (!admin) {
         throw new Error('Cannot find the user!');
     }
@@ -229,7 +231,7 @@ export const addMemberToHouse = GQLMutation`
     const house = await HouseResource.get(houseId);
     verifyIsAdmin(jwt, house, 'Only administrators can add members to a house.');
 
-    const admin = await UserModel.get(memberId);
+    const admin = await UserResource.get(memberId);
     if (!admin) {
         throw new Error('Cannot find the user!');
     }

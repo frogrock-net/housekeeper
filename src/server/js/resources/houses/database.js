@@ -1,6 +1,5 @@
 // @flow
 import mongoose from 'mongoose';
-import { partialRight } from 'lodash';
 import validator from 'validator';
 import MongooseResource from '../mongoose_resource';
 
@@ -15,7 +14,7 @@ const schema = new mongoose.Schema({
         zip: {
             type: String,
             validate: {
-                validator: partialRight(validator.isPostalCode, 'US'),
+                validator: value => validator.isPostalCode(value, 'US'),
                 message: props => `${props.value} is not a valid US zipcode`,
             },
         },
