@@ -25,7 +25,6 @@
         "babel-preset-react": "^6.24.1",
         "babel-preset-stage-1": "^6.24.1",
         "babel-runtime": "^6.26.0",
-        "body-parser": "^1.18.3",
         "cors": "^2.8.5",
         "crypto": "^1.0.1",
         "dotenv": "^6.1.0",
@@ -58,6 +57,7 @@
         "enzyme": "^3.7.0",
         "file-loader": "^2.0.0",
         "flow-bin": "^0.86.0",
+        "graphql-playground-middleware-express": "^1.7.8",
         "html-webpack-plugin": "^3.2.0",
         "husky": "^1.2.0",
         "kill-port": "^1.3.2",
@@ -77,11 +77,14 @@
     "scripts": {
         "flow": "flow",
         "devclient": "webpack-dev-server --config './webpack/webpack.dev.js'",
-        "devserver": "nodemon src/server/js/server.js --exec 'kill-port 9229; babel-node --inspect'",
+        "devserver": "nodemon --exec 'kill-port 9229; kill-port 9229; babel-node --inspect src/server/js/server.js'",
         "build": "webpack --config './webpack/webpack.prod.js' && npx babel -d ./build/server/js ./src/server/js -s && npx babel -d ./build/common ./src/common -s",
         "dev": "concurrently \"npm run devserver\" \"npm run devclient\"",
         "prod": "npm run build && node build/server/js/server.js",
         "start": "node build/server/js/server.js"
+    },
+    "nodemonConfig": {
+        "delay": "500"
     },
     "author": "alex & friends",
     "husky": {

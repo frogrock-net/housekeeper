@@ -1,5 +1,5 @@
 // @flow
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { partialRight } from 'lodash';
 import validator from 'validator';
 import MongooseResource from '../mongoose_resource';
