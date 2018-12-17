@@ -68,14 +68,23 @@ export const GQLMutation = strings => {
  * Format a GraphQL type string.
  *
  * @param strings
+ * @param vars
  * @returns {function(*=): {name: string, func: *, def: *, type: string}}
  * @constructor
  */
-export const GQLType = strings => {
+export const GQLType = (strings, ...vars) => {
+    let joined = '';
+    for (let i = 0; i < strings.length; i++) {
+        joined += strings[i];
+        if (i < vars.length) {
+            joined += vars[i];
+        }
+    }
+
     return {
         type: GQL_TYPE_TYPEDEF,
         defs: gql`
-            ${strings}
+            ${joined}
         `,
     };
 };
