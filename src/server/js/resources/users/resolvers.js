@@ -39,19 +39,7 @@ export const userById = GQLQuery`
     Must be authenticated as the user being accessed.
     """
     userById(userId: ID!): User
-`(async (root, { userId }, { jwt }) => {
-    if (!jwt || jwt.id !== userId) {
-        throw new Error('Cannot find the user!');
-    }
-
-    const user = await UserResource.get(userId);
-
-    if (!user) {
-        throw new Error('Cannot find the user!');
-    }
-
-    return user;
-});
+`((root, { userId }, { requester }) => UserResource.get(userId, requester));
 
 // --------------------------
 // Mutations
@@ -73,7 +61,7 @@ export const userById = GQLQuery`
 export const createUser = GQLMutation`
     "Create a user."
     createUser(email: String!, firstName: String, lastName: String, password: String!): User
-`((root, args) => UserResource.create(args));
+`((root, args, { requester }) => UserResource.create(args, requester));
 
 /**
  * Perform the 'login user' mutation.

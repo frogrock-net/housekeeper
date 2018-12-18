@@ -1,7 +1,6 @@
 // @flow
 import HouseResource from './model';
 import { GQLMutation, GQLQuery, GQLType } from '../gql';
-import UserResource from '../users/model';
 
 // --------------------------
 // typeDefs
@@ -56,7 +55,7 @@ export const House = GQLType`
 export const getHouse = GQLQuery`
     "Get a house by it's unique id."
     getHouse(houseId: ID!): House
-`((root, { houseId }) => HouseResource.get(houseId));
+`((root, { houseId }, { requester }) => HouseResource.get(houseId, requester));
 
 /**
  * Resolve the 'get all' query.
@@ -64,33 +63,9 @@ export const getHouse = GQLQuery`
  * @returns {*} a promise that resolves into the found houses.
  */
 export const allHouses = GQLQuery`
-    "Get all houses."
+    "Get all houses visible to the requesting user."
     allHouses: [House]
-`(() => HouseResource.getAll());
-
-/**
- * Resolve the 'get houses by administrator id' query.
- *
- * @param root the root resolver
- * @param args the arguments for this query
- * @returns {*} a promise that resolves into the found houses.
- */
-export const housesByAdministrator = GQLQuery`
-    "Get all houses that are administered by the provided user id."
-    housesByAdministrator(administratorId: ID!): [House]
-`((root, { administratorId }) => HouseResource.getByAdministrator(administratorId));
-
-/**
- * Resolve the 'get houses by member id' query.
- *
- * @param root the root resolver
- * @param args the arguments for this query
- * @returns {*} a promise that resolves into the found houses.
- */
-export const housesByMember = GQLQuery`
-    "Get all houses that have the provided user id as a member."
-    housesByMember(memberId: ID!): [House]
-`((root, { memberId }) => HouseResource.getByMember(memberId));
+`((root, args, { requester }) => HouseResource.getAll(requester));
 
 // --------------------------
 // Mutations
@@ -115,7 +90,7 @@ export const housesByMember = GQLQuery`
 export const createHouse = GQLMutation`
     "Create a house with the provided attributes."
     createHouse(name: String!, description: String, street: String, city: String, state: String, zip: String): House
-`(async (root, args, { jwt }) => {
+`((root, args, { requester }) => {
     const { name, description, street, city, state, zip } = args;
     const houseData = {
         name,
@@ -126,10 +101,10 @@ export const createHouse = GQLMutation`
             state,
             zip,
         },
-        administrators: [jwt.id],
+        administrators: [requester],
     };
 
-    return HouseResource.create(houseData);
+    return HouseResource.create(houseData, requester);
 });
 
 /**
@@ -155,7 +130,7 @@ export const updateHouse = GQLMutation`
     Ensures that the calling user (identified by their JWT token) has permission to administer the house.
     """
     updateHouse(houseId: ID!, name: String, description: String, street: String, city: String, state: String, zip: String): House
-`(async (root, args, { jwt }) => {
+`((root, args, { requester }) => {
     const { houseId, name, description, street, city, state, zip } = args;
     const houseData = {
         name,
@@ -168,10 +143,7 @@ export const updateHouse = GQLMutation`
         },
     };
 
-    const house = await HouseResource.get(houseId);
-    verifyIsAdmin(jwt, house, 'Only administrators can update a house.');
-
-    return HouseResource.patch(house, houseData);
+    return HouseResource.patch(houseData, requester);
 });
 
 /**
@@ -192,22 +164,7 @@ export const addAdministratorToHouse = GQLMutation`
     Ensures that the calling user (identified by their JWT token) has permission to administer the house.
     """
     addAdministratorToHouse(administratorId: ID!, houseId: ID!): House
-`(async (root, { houseId, administratorId }, { jwt }) => {
-    const house = await HouseResource.get(houseId);
-    verifyIsAdmin(jwt, house, 'Only administrators can add administrators to a house!');
-
-    const admin = await UserResource.get(administratorId);
-    if (!admin) {
-        throw new Error('Cannot find the user!');
-    }
-
-    if (!house.administrators.find(admin => admin == administratorId)) {
-        const administrators = house.administrators.concat(administratorId);
-        return HouseResource.patch(house, { administrators });
-    }
-
-    return house;
-});
+`((root, { houseId, administratorId }, { requester }) => HouseResource.addAdministrator(houseId, administratorId, requester));
 
 /**
  * Perform the 'add member to house' mutation.
@@ -227,22 +184,7 @@ export const addMemberToHouse = GQLMutation`
     Ensures that the calling user (identified by their JWT token) has permission to administer the house.
     """
     addMemberToHouse(memberId:ID!, houseId: ID!): House
-`(async (root, { houseId, memberId }, { jwt }) => {
-    const house = await HouseResource.get(houseId);
-    verifyIsAdmin(jwt, house, 'Only administrators can add members to a house.');
-
-    const admin = await UserResource.get(memberId);
-    if (!admin) {
-        throw new Error('Cannot find the user!');
-    }
-
-    if (!house.members.find(member => member == memberId)) {
-        const members = house.members.concat(memberId);
-        return HouseResource.patch(house, { members });
-    }
-
-    return house;
-});
+`((root, { houseId, memberId }, { requester }) => HouseResource.addMember(houseId, memberId, requester));
 
 /**
  * Perform the 'remove member from house' mutation.
@@ -262,14 +204,7 @@ export const removeMemberFromHouse = GQLMutation`
     Ensures that the calling user (identified by their JWT token) has permission to administer the house.
     """
     removeMemberFromHouse(memberId: ID!, houseId: ID!): House
-`(async (root, { houseId, memberId }, { jwt }) => {
-    const house = await HouseResource.get(houseId);
-    verifyIsAdmin(jwt, house, 'Only administrators can remove members from a house.');
-
-    const members = house.members.filter(member => member != memberId);
-
-    return HouseResource.patch(house, { members });
-});
+`((root, { houseId, memberId }, { requester }) => HouseResource.removeMember(houseId, memberId, requester));
 
 /**
  * Perform the 'delete house' mutation.
@@ -290,25 +225,4 @@ export const deleteHouse = GQLMutation`
     Ensures that the calling user (identified by their jwt token) has permission to administer the house.
     """
     deleteHouse(houseId: ID!): House
-`(async (root, { houseId }, { jwt }) => {
-    const house = await HouseResource.get(houseId);
-    verifyIsAdmin(jwt, house, 'Only administrators can delete a house.');
-
-    return HouseResource.delete(house);
-});
-
-// --------------------------
-// Helpers
-// --------------------------
-/**
- * Verify that the currently authenticated user can administer the provided house.
- *
- * @param jwt the user's token
- * @param house the house to check
- * @param errMsg the error message to respond with, if unsuccessful
- */
-const verifyIsAdmin = (jwt, house, errMsg) => {
-    if (!jwt || house.administrators.filter(admin => admin == jwt.id).size() === 0) {
-        throw new Error(errMsg);
-    }
-};
+`(async (root, { houseId }, { requester }) => HouseResource.delete(houseId, requester));

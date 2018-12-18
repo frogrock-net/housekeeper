@@ -67,7 +67,7 @@ const queryTypeDefs = `
 const schema = new ApolloServer({
     typeDefs: [...TYPES[GQL_TYPE_TYPEDEF], queryTypeDefs],
     resolvers: RESOLVERS,
-    context: ({ req }) => ({ jwt: req.jwt }),
+    context: ({ req }) => ({ requester: req.jwt ? req.jwt.id : null }),
 });
 
 export default schema;

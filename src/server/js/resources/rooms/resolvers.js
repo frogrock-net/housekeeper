@@ -1,7 +1,6 @@
 // @flow
 import { GQLMutation, GQLQuery, GQLType } from '../gql';
-import RoomResource from './model';
-import HouseResource from '../houses/model';
+import RoomModel from './model';
 
 // --------------------------
 // typeDefs
@@ -35,7 +34,7 @@ export const roomsByHouse = GQLQuery`
     Get all rooms for the provided house.
     """
     roomsByHouse(houseId: ID!): [Room]
-`((root, { houseId }) => RoomResource.getByHouse(houseId));
+`((root, { houseId }, { requester }) => RoomModel.getByHouse(houseId, requester));
 
 // --------------------------
 // Mutations
@@ -60,15 +59,7 @@ export const createRoom = GQLMutation`
     Must be authenticated as an administrator for the house to update.
     """
     createRoom(name: String!, capacity: Int, description: String, house: String!): Room
-`(async (root, args, { jwt }) => {
-    const house = await HouseResource.get(args.house);
-
-    if (!house || !jwt || !isAdmin(jwt.id, house)) {
-        throw new Error('Only administrators can add rooms to a house.');
-    }
-
-    return RoomResource.create(args);
-});
+`((root, args, { requester }) => RoomModel.create(args, requester));
 
 /**
  * Perform the 'update room' mutation.
@@ -91,16 +82,7 @@ export const updateRoom = GQLMutation`
     Must be authenticated as an administrator for the house to update.
     """
     updateRoom(id: String!, name: String, capacity: Int, description: String): Room
-`(async (root, args, { jwt }) => {
-    const room = await RoomResource.get(args.id);
-    const house = await HouseResource.get(room.house);
-
-    if (!house || !jwt || !isAdmin(jwt.id, house)) {
-        throw new Error('Only administrators can add rooms to a house.');
-    }
-
-    return RoomResource.patch(room, args);
-});
+`((root, args, { requester }) => RoomModel.patch(args, requester));
 
 /**
  * Perform the 'delete room' mutation.
@@ -119,23 +101,4 @@ export const deleteRoom = GQLMutation`
     Must be authenticated as an administrator for the house to update.
     """
     deleteRoom(id: String): Room
-`(async (root, { id }, { jwt }) => {
-    const room = await RoomResource.get(id);
-    const house = await HouseResource.get(room.house);
-
-    if (!house || !jwt || !isAdmin(jwt.id, house)) {
-        throw new Error('Only administrators can add rooms to a house.');
-    }
-
-    return RoomResource.delete(id);
-});
-// --------------------------
-// Helpers
-// --------------------------
-/**
- * Does the provided userId appear in the list of administrators for this house?
- * @param userId the user to check
- * @param house the house to check
- * @returns truthy if the userId is an admin for the house
- */
-const isAdmin = (userId, house) => house.administrators.find(admin => admin == userId);
+`((root, { id }, { requester }) => RoomModel.delete(id, requester));

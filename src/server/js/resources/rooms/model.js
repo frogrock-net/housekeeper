@@ -1,6 +1,7 @@
 // @flow
 import mongoose from 'mongoose';
 import BaseModel from '../model';
+import HouseModel from '../houses/model';
 
 /**
  * The 'room' schema, as represented in MongoDB.
@@ -37,12 +38,94 @@ class RoomModel extends BaseModel {
     }
 
     /**
+     * Get each entity object.
+     *
+     * @param requester the id of the user attempting to perform this
+     * @returns {*} a promise that resolves into the found entities
+     */
+    async getAll(requester: string) {
+        throw new Error(`Not supported!`);
+    }
+
+    /**
      * Get a list containing all rooms for the provided houseId.
      *
      * @param houseId the house to filter
+     * @param requester the id of the user attempting to perform this
      */
-    getByHouse(houseId: string) {
-        return this.model.find({ house: houseId }).exec();
+    async getByHouse(houseId: string, requester: string) {
+        const house = await HouseModel.get(houseId, requester);
+
+        if (house) {
+            return this.model.find({ house: houseId }).exec();
+        }
+
+        throw new Error(`Not found!`);
+    }
+
+    /**
+     * Can the requesting user get an entity of this type?
+     *
+     * @param doc the fetched document
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canGet(doc: mongoose.MongooseDocument, requester: string) {
+        try {
+            const house = await HouseModel.get(doc.houseId, requester);
+            return !!house;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * Can the requesting user create entities of this type?
+     *
+     * @param data the entity to create
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canCreate(data: { [string]: any }, requester: string) {
+        try {
+            const house = await HouseModel.get(data.houseId, requester);
+            return HouseModel.canCreate(house, requester);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * Can the requesting user update an entity of this type?
+     *
+     * @param doc the updated document
+     * @param data the data to update
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canUpdate(doc: mongoose.MongooseDocument, data: { [string]: any }, requester: string) {
+        try {
+            const house = await HouseModel.get(doc.houseId, requester);
+            return HouseModel.canUpdate(house, {}, requester);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * Can the requesting user delete an entity of this type?
+     *
+     * @param doc the document to delete
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canDelete(doc: mongoose.MongooseDocument, requester: string) {
+        try {
+            const house = await HouseModel.get(doc.houseId, requester);
+            return HouseModel.canDelete(house, requester);
+        } catch (e) {
+            return false;
+        }
     }
 }
 

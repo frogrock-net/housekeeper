@@ -21,7 +21,7 @@ export const Booking = GQLType`
         endDate: DateTime
         room: Room
         startDate: DateTime
-        status: String
+        status: BookingStatus
     }
 `;
 
@@ -35,14 +35,9 @@ export const Booking = GQLType`
  * @param args the arguments for this query
  * @returns {Promise} a promise that resolves into the found bookings.
  */
-export const bookingsByUser = GQLQuery`
+export const myBookings = GQLQuery`
     """
-    Get all bookings made by the currently authenticated user.
+    Get all bookings made by the currently authenticated user
     """
-    bookingsByUser(userId: ID!): [Booking]
-`((root, { userId }, { jwt }) => {
-    if (jwt || jwt.id != userId) {
-        throw new Error('Cannot find the user!');
-    }
-    return BookingResource.getByUser(userId);
-});
+    myBookings: [Booking]
+`((root, args, { requester }) => BookingResource.getByUser(requester));

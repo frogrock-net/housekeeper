@@ -45,6 +45,8 @@ const schema = new mongoose.Schema({
 
 /**
  * The 'booking' resource class.
+ *
+ * This is very incomplete.
  */
 class BookingModel extends BaseModel {
     /**
@@ -63,6 +65,51 @@ class BookingModel extends BaseModel {
      */
     getByUser(userId: string) {
         return this.model.find({ booker: userId }).exec();
+    }
+
+    /**
+     * Can the requesting user get an entity of this type?
+     *
+     * @param doc the fetched document
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canGet(doc: mongoose.MongooseDocument, requester: string) {
+        return true;
+    }
+
+    /**
+     * Can the requesting user create entities of this type?
+     *
+     * @param data the entity to create
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canCreate(data: {}, requester: string) {
+        return true;
+    }
+
+    /**
+     * Can the requesting user update an entity of this type?
+     *
+     * @param doc the updated document
+     * @param data the data to update
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canUpdate(doc: mongoose.MongooseDocument, data: {}, requester: string) {
+        return true;
+    }
+
+    /**
+     * Can the requesting user delete an entity of this type?
+     *
+     * @param doc the document to delete
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canDelete(doc: mongoose.MongooseDocument, requester: string) {
+        return true;
     }
 }
 

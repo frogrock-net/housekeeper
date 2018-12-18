@@ -1,7 +1,9 @@
 // @flow
 import mongoose from 'mongoose';
+import { AuthenticationError, ForbiddenError } from 'apollo-server-express';
 import validator from 'validator';
 import BaseModel from '../model';
+import UserModel from '../users/model';
 
 /**
  * The 'house' schema, as represented in MongoDB.
@@ -47,56 +49,175 @@ class HouseModel extends BaseModel {
     /**
      * Construct the house resource class.
      *
-     * Inherits 'create', 'get', 'getAll', and 'delete' from the base BaseModel class.
+     * Inherits 'create', 'patch', 'get', 'getAll', and 'delete' from the base BaseModel class.
      */
     constructor() {
         super(mongoose.model('HouseModel', schema));
     }
 
     /**
-     * Get all houses that are administered by the provided administrator id.
+     * Get each entity object.
      *
-     * @param adminId the administrator id to check
+     * @param requester the id of the user attempting to perform this
+     * @returns {*} a promise that resolves into the found entities
      */
-    getByAdministrator(adminId: string) {
-        return this.model.find({ administrators: adminId }).exec();
+    async getAll(requester: string) {
+        if (requester) {
+            return this.model
+                .find()
+                .or({ administrators: requester }, { members: requester })
+                .exec();
+        } else {
+            throw AuthenticationError(`Must authenticate to get houses.`);
+        }
     }
 
     /**
-     * Get all houses that are administered by the provided administrator id.
+     * Add an administrator to a house.
      *
-     * @param adminId the administrator id to check
+     * @param houseId the house to update
+     * @param userId the user to make an administrator
+     * @param requester the id of the user attempting to perform this
+     * @returns {Promise<void>}
      */
-    getByMember(adminId: string) {
-        return this.model.find({ members: adminId }).exec();
-    }
+    async addAdministrator(houseId: string, userId: string, requester: string) {
+        const house = await this.get(houseId, requester);
+        const authorized = await this.canUpdate(house, {}, requester);
 
-    /**
-     * Patch a house entity, updating the house with the fields contained in the attributes object.
-     * @param house the entity object
-     * @param attributes the object attributes to update
-     * @returns {*} a promise that resolves into the updated entity
-     */
-    patch(house: mongoose.MongooseDocument, attributes: { [string]: any }) {
-        // only allow these fields to be edited
-        const UPDATABLE_FIELDS = ['administrators', 'description', 'members', 'name'];
-        const UPDATABLE_ADDRESS_FIELDS = ['street', 'city', 'state', 'zip'];
+        if (authorized) {
+            const newAdmin = await UserModel.get(userId, userId);
 
-        UPDATABLE_FIELDS.forEach(field => {
-            if (attributes[field] !== undefined) {
-                house[field] = attributes[field];
+            if (!newAdmin) {
+                throw new Error(`Can't find the user!`);
             }
-        });
 
-        if (attributes.address) {
-            UPDATABLE_ADDRESS_FIELDS.forEach(field => {
-                if (attributes.address[field] !== undefined) {
-                    house.address[field] = attributes.address[field];
-                }
-            });
+            if (!house.administrators.find(admin => admin == userId)) {
+                house.administrators.push(userId);
+                return house.save();
+            }
+
+            return house;
         }
 
-        return house.save();
+        throw new ForbiddenError(`Not allowed to update this house!`);
+    }
+
+    /**
+     * Add a member to a house.
+     *
+     * @param houseId the house to update
+     * @param userId the user to make a member
+     * @param requester the id of the user attempting to perform this
+     * @returns {Promise<void>}
+     */
+    async addMember(houseId: string, userId: string, requester: string) {
+        const house = await this.get(houseId, requester);
+        const authorized = await this.canUpdate(house, {}, requester);
+
+        if (authorized) {
+            const newMember = await UserModel.get(userId, userId);
+
+            if (!newMember) {
+                throw new Error(`Can't find the user!`);
+            }
+
+            if (!house.members.find(member => member == userId)) {
+                house.members.push(userId);
+                return house.save();
+            }
+
+            return house;
+        }
+
+        throw new ForbiddenError(`Not allowed to update this house!`);
+    }
+
+    /**
+     * Remove a member from a house.
+     *
+     * @param houseId the house to update
+     * @param userId the user to remove from the house
+     * @param requester the id of the user attempting to perform this
+     * @returns {Promise<void>}
+     */
+    async removeMember(houseId: string, userId: string, requester: string) {
+        const house = await this.get(houseId, requester);
+        const authorized = await this.canUpdate(house, {}, requester);
+        if (authorized) {
+            house.members = house.members.filter(member => member != userId);
+            return house.save();
+        }
+
+        throw new ForbiddenError(`Not allowed to update this house!`);
+    }
+
+    /**
+     * Verify that the currently authenticated user can administer the provided house.
+     *
+     * @param userId the user id to check
+     * @param house the house to check
+     * @returns {boolean}
+     * @private
+     */
+    _isAdmin(userId: string, house: mongoose.MongooseDocument) {
+        return !!(userId && house.administrators.find(admin => admin == userId));
+    }
+
+    /**
+     * Verify that the currently authenticated user can administer the provided house.
+     *
+     * @param userId the user id to check
+     * @param house the house to check
+     * @returns {boolean}
+     * @private
+     */
+    _isMember(userId: string, house: mongoose.MongooseDocument) {
+        return !!(userId && house.members.find(member => member == userId));
+    }
+
+    /**
+     * Can the requesting user get an entity of this type?
+     *
+     * @param doc the fetched document
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canGet(doc: mongoose.MongooseDocument, requester: string) {
+        return this._isAdmin(requester, doc) || this._isMember(requester, doc);
+    }
+
+    /**
+     * Can the requesting user create entities of this type?
+     *
+     * @param data the entity to create
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canCreate(data: {}, requester: string) {
+        return true;
+    }
+
+    /**
+     * Can the requesting user update an entity of this type?
+     *
+     * @param doc the updated document
+     * @param data the data to update
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canUpdate(doc: mongoose.MongooseDocument, data: {}, requester: string) {
+        return this._isAdmin(requester, doc);
+    }
+
+    /**
+     * Can the requesting user delete an entity of this type?
+     *
+     * @param doc the document to delete
+     * @param requester the requesting user id
+     * @returns {boolean}
+     */
+    async canDelete(doc: mongoose.MongooseDocument, requester: string) {
+        return this._isAdmin(requester, doc);
     }
 }
 
