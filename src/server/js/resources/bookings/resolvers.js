@@ -1,7 +1,7 @@
 // @flow
 import { GQLQuery, GQLType } from '../gql';
 import { BOOKING_STATUSES } from '../../../../common/constants';
-import BookingResource from './database';
+import BookingResource from './model';
 // --------------------------
 // typeDefs
 // --------------------------

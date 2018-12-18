@@ -1,6 +1,6 @@
 // @flow
 import mongoose from 'mongoose';
-import MongooseResource from '../resource';
+import BaseModel from '../model';
 
 /**
  * The 'room' schema, as represented in MongoDB.
@@ -26,11 +26,11 @@ const schema = new mongoose.Schema({
 /**
  * The 'room' resource class.
  */
-class RoomResource extends MongooseResource {
+class RoomModel extends BaseModel {
     /**
      * Construct the room resource class.
      *
-     * Inherits 'create', 'patch', 'get', 'getAll', and 'delete' from the base MongooseResource class.
+     * Inherits 'create', 'patch', 'get', 'getAll', and 'delete' from the base BaseModel class.
      */
     constructor() {
         super(mongoose.model('RoomModel', schema));
@@ -46,6 +46,6 @@ class RoomResource extends MongooseResource {
     }
 }
 
-// export a singleton RoomResource.
-const resource = new RoomResource();
+// export a singleton RoomModel.
+const resource = new RoomModel();
 export default resource;

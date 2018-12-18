@@ -1,7 +1,7 @@
 // @flow
 import mongoose from 'mongoose';
 import validator from 'validator';
-import MongooseResource from '../resource';
+import BaseModel from '../model';
 
 /**
  * The 'house' schema, as represented in MongoDB.
@@ -43,11 +43,11 @@ const schema = new mongoose.Schema({
 /**
  * The 'house' resource class.
  */
-class HouseResource extends MongooseResource {
+class HouseModel extends BaseModel {
     /**
      * Construct the house resource class.
      *
-     * Inherits 'create', 'get', 'getAll', and 'delete' from the base MongooseResource class.
+     * Inherits 'create', 'get', 'getAll', and 'delete' from the base BaseModel class.
      */
     constructor() {
         super(mongoose.model('HouseModel', schema));
@@ -100,6 +100,6 @@ class HouseResource extends MongooseResource {
     }
 }
 
-// export a singleton HouseResource.
-const resource = new HouseResource();
+// export a singleton HouseModel.
+const resource = new HouseModel();
 export default resource;

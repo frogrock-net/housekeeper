@@ -1,6 +1,6 @@
 // @flow
 import { GQLMutation, GQLQuery, GQLType } from '../gql';
-import UserResource from './database';
+import UserResource from './model';
 
 // --------------------------
 // typeDefs

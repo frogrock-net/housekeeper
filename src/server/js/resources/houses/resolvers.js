@@ -1,7 +1,7 @@
 // @flow
-import HouseResource from './database';
+import HouseResource from './model';
 import { GQLMutation, GQLQuery, GQLType } from '../gql';
-import UserResource from '../users/database';
+import UserResource from '../users/model';
 
 // --------------------------
 // typeDefs

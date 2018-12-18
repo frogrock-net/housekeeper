@@ -1,6 +1,6 @@
 // @flow
 import mongoose from 'mongoose';
-import MongooseResource from '../resource';
+import BaseModel from '../model';
 import moment from 'moment';
 import { BOOKING_STATUSES } from '../../../../common/constants';
 
@@ -46,11 +46,11 @@ const schema = new mongoose.Schema({
 /**
  * The 'booking' resource class.
  */
-class BookingResource extends MongooseResource {
+class BookingModel extends BaseModel {
     /**
      * Construct the booking resource class.
      *
-     * Inherits 'create', 'patch', 'get', 'getAll', and 'delete' from the base MongooseResource class.
+     * Inherits 'create', 'patch', 'get', 'getAll', and 'delete' from the base BaseModel class.
      */
     constructor() {
         super(mongoose.model('BookingModel', schema));
@@ -66,6 +66,6 @@ class BookingResource extends MongooseResource {
     }
 }
 
-// export a singleton RoomResource.
-const resource = new BookingResource();
+// export a singleton BookingModel.
+const resource = new BookingModel();
 export default resource;

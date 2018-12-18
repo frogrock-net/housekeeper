@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import MongooseResource from '../resource';
+import BaseModel from '../model';
 
 /**
  * The 'user' schema, as represented in MongoDB.
@@ -63,11 +63,11 @@ schema.methods.generateToken = function() {
 /**
  * The 'user' resource class.
  */
-class UserResource extends MongooseResource {
+class UserModel extends BaseModel {
     /**
      * Construct the user resource class.
      *
-     * Inherits 'get', 'getAll', and 'delete' from the base MongooseResource class.
+     * Inherits 'get', 'getAll', and 'delete' from the base BaseModel class.
      */
     constructor() {
         super(mongoose.model('UserModel', schema));
@@ -149,6 +149,6 @@ class UserResource extends MongooseResource {
     }
 }
 
-// export a singleton HouseResource.
-const resource = new UserResource();
+// export a singleton UserModel.
+const resource = new UserModel();
 export default resource;

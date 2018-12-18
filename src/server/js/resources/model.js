@@ -2,11 +2,11 @@
 import * as mongoose from 'mongoose';
 
 /**
- * A simple mongoose resource class that provides basic CRUD operations on a model object.
+ * A simple mongoose model class that provides basic CRUD operations on an entity object.
  *
  * Should be extended for specific entities.
  */
-export default class MongooseResource {
+export default class BaseModel {
     model: mongoose.MongooseModel;
 
     /**
