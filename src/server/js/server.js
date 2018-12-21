@@ -1,11 +1,9 @@
 require('babel-core/register');
 require('dotenv').config();
-import bodyParser from 'body-parser';
+
 import express from 'express';
 import cors from 'cors';
 import expressJwt from 'express-jwt';
-import { graphiqlExpress, graphqlExpress } from 'graphql-server-express';
-import path from 'path';
 import schema from './schema';
 import errorHandler from './error';
 import mongoose from './mongoose';
@@ -27,26 +25,10 @@ const configure = app => {
     app.use(cors());
     app.use(express.static('build/client/js'));
     app.use(errorHandler);
-    app.use(bodyParser.json());
     app.use(auth);
 
     // configure the graphql endpoint
-    app.use(
-        '/graphql',
-        graphqlExpress(req => ({
-            schema,
-            context: { jwt: req.jwt },
-        }))
-    );
-
-    // set up the graphiql endpoint.
-    // we should probably disable this for non-dev...
-    app.use(
-        '/graphiql',
-        graphiqlExpress({
-            endpointURL: '/graphql',
-        })
-    );
+    schema.applyMiddleware({ app, path: '/graphql' });
 
     // any other route should be directed at the front-end
     app.use('*', function(req, resp) {

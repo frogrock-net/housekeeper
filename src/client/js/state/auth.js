@@ -66,7 +66,9 @@ export default auth;
  */
 const AUTHENTICATE = gql`
     mutation Authenticate($email: String!, $password: String!) {
-        loginUser(email: $email, password: $password)
+        loginUser(email: $email, password: $password) {
+            token
+        }
     }
 `;
 
@@ -120,7 +122,7 @@ export const Authenticate = ({ children }: Props) => {
     const wrapper = (mutate, data) => login(mutate, data, children);
 
     const update = (cache, e) => {
-        auth.token = e.data.loginUser;
+        auth.token = e.data.loginUser.token;
     };
 
     return (

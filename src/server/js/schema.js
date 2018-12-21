@@ -1,28 +1,73 @@
-import { merge } from 'lodash';
-import { makeExecutableSchema } from 'graphql-tools';
+import { ApolloServer } from 'apollo-server-express';
+import { readdirSync, statSync } from 'fs';
+import path from 'path';
+import { GQL_TYPE_MUTATION, GQL_TYPE_QUERY, GQL_TYPE_TYPEDEF } from './resources/gql';
 
-import * as bookingSchema from './resources/bookings/schema';
-import * as houseSchema from './resources/houses/schema';
-import * as roomSchema from './resources/rooms/schema';
-import * as userSchema from './resources/users/schema';
+const TYPES = {
+    [GQL_TYPE_TYPEDEF]: [],
+    [GQL_TYPE_QUERY]: [],
+    [GQL_TYPE_MUTATION]: [],
+};
 
-// This base Query and Mutation types are meant to be extended in each model schema.
-// An empty Query/Mutation cannot be extended, need to use a fake empty field.
+const RESOLVERS = {
+    Query: {},
+    Mutation: {},
+};
+
+//
+// Iterate through each directory in the server/js/resources/ folder, looking for 'resolver.js' files.
+//
+// If found, pulls each exported function from the 'resolver.js' file and sorts them as a 'type', 'query', or 'mutation'.
+//
+// Uses these to build the GraphQL server.
+//
+const dirs = p => readdirSync(p).filter(f => statSync(path.join(p, f)).isDirectory());
+dirs(`${__dirname}/resources`).forEach(dir => {
+    try {
+        const resolvers = require(`./resources/${dir}/resolvers`);
+
+        Object.entries(resolvers).forEach(([name, resolver]) => {
+            const n = resolver.name || name;
+            switch (resolver.type) {
+                case GQL_TYPE_MUTATION:
+                    TYPES[GQL_TYPE_MUTATION].push(resolver.def);
+                    RESOLVERS.Mutation[n] = resolver.func;
+                    break;
+                case GQL_TYPE_TYPEDEF:
+                    TYPES[GQL_TYPE_TYPEDEF].push(resolver.defs);
+                    break;
+                case GQL_TYPE_QUERY:
+                    TYPES[GQL_TYPE_QUERY].push(resolver.def);
+                    RESOLVERS.Query[n] = resolver.func;
+                    break;
+            }
+        });
+        console.info(`✅ Loaded resolvers for resource: ${dir}.`);
+    } catch (e) {
+        console.error(`❌ Error: can't find 'resolvers' module in resource folder: ${dir}.`);
+        console.error(`\t- ${e.message}`);
+    }
+});
+
 const queryTypeDefs = `
     scalar DateTime
 
     type Query {
-        _empty: String
+        ${TYPES[GQL_TYPE_QUERY].join(',\n\t')}
     }
 
     type Mutation {
-        _empty: String
+        ${TYPES[GQL_TYPE_MUTATION].join(',\n\t')}
     }
 `;
 
-const schema = makeExecutableSchema({
-    typeDefs: [queryTypeDefs, bookingSchema.typeDefs, houseSchema.typeDefs, roomSchema.typeDefs, userSchema.typeDefs],
-    resolvers: merge(bookingSchema.resolvers, houseSchema.resolvers, roomSchema.resolvers, userSchema.resolvers),
+/**
+ * Create the ApolloServer from the dynamically-generated typeDefs, Queries, and Mutations.
+ */
+const schema = new ApolloServer({
+    typeDefs: [...TYPES[GQL_TYPE_TYPEDEF], queryTypeDefs],
+    resolvers: RESOLVERS,
+    context: ({ req }) => ({ requester: req.jwt ? req.jwt.id : null }),
 });
 
 export default schema;

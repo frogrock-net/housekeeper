@@ -121,7 +121,10 @@ export const CreateHouse = ({ children }: CreateHouseProps) => {
         const house = e.data.createHouse;
         const data = cache.readQuery(query);
         data.housesByAdministrator.push(house);
-        cache.writeQuery({ ...query, data });
+        cache.writeQuery({
+            ...query,
+            data,
+        });
     };
 
     return (
@@ -139,8 +142,8 @@ export const CreateHouse = ({ children }: CreateHouseProps) => {
  * List all houses for a given administratorId.
  */
 const LIST_OWNED_HOUSES = gql`
-    query ListOwnedHouses($administratorId: ID!) {
-        housesByAdministrator(administratorId: $administratorId) {
+    query ListOwnedHouses {
+        allHouses {
             id
             name
         }
@@ -165,15 +168,11 @@ type ListOwnedHousesProps = {
  * Query component that fetches a list containing each house the currently-authenticated user administers.
  */
 export const ListOwnedHouses = (props: ListOwnedHousesProps) => (
-    <StateContext.Consumer>
-        {state => (
-            <Query query={LIST_OWNED_HOUSES} variables={{ administratorId: state.auth._id }}>
-                {({ loading, error, data }) => {
-                    return props.children(data ? data.housesByAdministrator : [], loading, error);
-                }}
-            </Query>
-        )}
-    </StateContext.Consumer>
+    <Query query={LIST_OWNED_HOUSES}>
+        {({ loading, error, data }) => {
+            return props.children(data ? data.allHouses : [], loading, error);
+        }}
+    </Query>
 );
 
 /**
