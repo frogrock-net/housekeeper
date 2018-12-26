@@ -9,6 +9,7 @@ import { BedIcon, ErrorIcon, HouseIcon } from '../Common/Icon';
 import ThumbnailGallery from '../Common/ThumbnailGallery';
 import { GetRoomsForHouse } from '../../state/rooms';
 import BorderedContainer from '../Common/BorderedContainer';
+import HouseBanner from './HouseBanner';
 
 /**
  * The props accepted by the ViewHouse component.
@@ -57,7 +58,7 @@ const renderViewHouse = (data, isLoading, error) => {
 
     return (
         <Container>
-            <Banner house={data} />
+            <HouseBanner house={data} />
             <ThumbnailGallery images={data.images} />
             <RoomList house={data} />
         </Container>
@@ -82,87 +83,6 @@ const CenteredContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-`;
-
-// -----------------------------------------------------------------------------
-// Banner
-// -----------------------------------------------------------------------------
-
-/**
- * A component that displays house information as a banner.
- *
- * @param house the house
- */
-const Banner = ({ house }) => {
-    const color = house && house.icon ? house.icon.color || 'white' : 'white';
-    const image = house && house.icon && house.icon.image ? <BannerImage image={house.icon.image} /> : <PlaceholderHouse color={color} />;
-    return (
-        <BannerContainer>
-            <BannerImageContainer color={color}>{image}</BannerImageContainer>
-            <BannerName>{house.name}</BannerName>
-            <BannerAddress address={house.address} />
-        </BannerContainer>
-    );
-};
-
-/**
- * Component that displays the location for the house.
- *
- * @param address the house's address object
- */
-const BannerAddress = ({ address }) => {
-    if (!address || (!address.city && !address.state)) return null;
-    const text = address.city && address.state ? `${address.city}, ${address.state}` : address.city ? address.city : address.state;
-    return <BannerLocation>{text}</BannerLocation>;
-};
-
-/**
- * A styled container div for the Banner component.
- */
-const BannerContainer = styled.div``;
-
-/**
- * A styled div that formats the text used in the Banner component.
- */
-const BannerName = styled.div`
-    padding: 10px;
-    color: #333;
-
-    font-family: 'Arvo', sans-serif;
-    font-weight: bold;
-    font-size: 20px;
-
-    text-align: center;
-    background-color: #eee;
-`;
-
-const BannerLocation = styled.div`
-    padding-bottom: 10px;
-    color: #666;
-
-    font-family: 'Raleway', sans-serif;
-    font-weight: bold;
-    font-size: 17px;
-
-    text-align: center;
-    background-color: #eee;
-`;
-
-/**
- * A styled div that contains a background image.
- */
-const BannerImage = styled.div`
-    height: 100%;
-    width: 100%;
-    background: url(${props => props.image});
-`;
-
-/**
- * A styled container div for the Banner component.
- */
-const BannerImageContainer = styled.div`
-    height: 150px;
-    background-color: ${props => props.color};
 `;
 
 // -----------------------------------------------------------------------------

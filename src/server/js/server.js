@@ -7,6 +7,7 @@ import expressJwt from 'express-jwt';
 import schema from './schema';
 import errorHandler from './error';
 import mongoose from './mongoose';
+import path from 'path';
 
 const PORT = process.env.PORT || '8080';
 

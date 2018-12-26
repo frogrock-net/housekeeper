@@ -31,6 +31,8 @@ type State = {
  * @returns true if the child component is a Form component.
  */
 const isFormChild = component => {
+    if (!component) return false;
+
     // when component is a styled component, the 'target' is the original component
     if (component.target) {
         return isFormChild(component.target);
@@ -93,7 +95,8 @@ export default class Form extends React.Component<Props, State> {
                         if (isFormChild(child.type)) {
                             return React.cloneElement(child, {
                                 onUpdate: this.onUpdate,
-                                value: this.state[child.props.fieldName],
+                                values: this.state,
+                                value: child.props.fieldName ? this.state[child.props.fieldName] : undefined,
                             });
                         } else {
                             return child;
@@ -120,3 +123,59 @@ const FormContainer = styled.div`
         margin-top: 10px;
     }
 `;
+
+/**
+ * Props supported by the FormDiv component.
+ * - className - a css class name to override this form's styles
+ * - children - one or more FormInput or SubmitButton components, which will be managed by this Form component.
+ * - onUpdate - a callback function called when a child element is updated
+ */
+type DivProps = {
+    className?: string,
+    children?: React.Node,
+    onUpdate: (string, any) => void,
+    values: { [string]: any },
+};
+
+/**
+ * A component that can contain form elements.
+ */
+export class FormDiv extends React.Component<DivProps> {
+    static defaultProps = {
+        isFormComponent: true,
+        values: {},
+    };
+
+    /**
+     * Callback function for when a child component in this form is updated.
+     *
+     * Will be injected into each child component.
+     *
+     * @param field the field name
+     * @param value the updated value
+     */
+    onUpdate = (field: string, value: any) => {
+        this.props.onUpdate(field, value);
+    };
+
+    /**
+     * Render the FormDiv.
+     */
+    render() {
+        return (
+            <div className={this.props.className}>
+                {React.Children.map(this.props.children, child => {
+                    if (isFormChild(child.type)) {
+                        return React.cloneElement(child, {
+                            onUpdate: this.onUpdate,
+                            values: this.props.values,
+                            value: child.props.fieldName ? this.props.values[child.props.fieldName] : undefined,
+                        });
+                    } else {
+                        return child;
+                    }
+                })}
+            </div>
+        );
+    }
+}

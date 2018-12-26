@@ -8,6 +8,7 @@ import { ListOwnedHouses } from '../../state/house';
 import { ROUTE_HOUSE_CREATE, ROUTE_HOUSE_VIEW } from '../../util/routes';
 import HouseHeader from './HouseHeader';
 import CreateHouse from './CreateHouse';
+import CreateHouse2 from './CreateHouse2';
 
 /**
  * Router for 'house' pages (hk/house).
@@ -18,7 +19,8 @@ import CreateHouse from './CreateHouse';
  */
 const House = () => (
     <Switch>
-        <Route exact path={ROUTE_HOUSE_CREATE} render={renderCreate} />
+        <Route exact path={ROUTE_HOUSE_CREATE} render={renderCreate2} />
+        <Route exact path={ROUTE_HOUSE_CREATE + 'old'} render={renderCreate} />
         <Route path={ROUTE_HOUSE_VIEW} render={renderView} />
     </Switch>
 );
@@ -30,6 +32,16 @@ const renderCreate = () => (
     <Fragment>
         <Header selected={'create'} />
         <CreateHouse />
+    </Fragment>
+);
+
+/**
+ * A render function for the WIP CreateHouse page.
+ */
+const renderCreate2 = () => (
+    <Fragment>
+        <Header selected={'create'} />
+        <CreateHouse2 />
     </Fragment>
 );
 
