@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Fragment } from 'react';
 import styled from 'styled-components';
 import { HouseIcon } from '../Common/Icon';
 import FormInput from '../Common/Form/FormInput';

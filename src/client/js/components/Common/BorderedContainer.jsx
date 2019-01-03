@@ -9,7 +9,8 @@ import theme from '../../util/theme';
  * - children - the react children
  * - borderColor - the border color
  * - innerColor - the content color
- * - spacing - the amount of space between the border and the content
+ * - spacing - the amount of space for the border
+ * - innerSpacing - the amount of padding
  * - className - a classname for this component
  */
 type Props = {
@@ -18,6 +19,7 @@ type Props = {
     borderColor: string,
     innerColor: string,
     spacing: number,
+    innerSpacing: number,
 
     className?: string,
 };
@@ -29,7 +31,7 @@ type Props = {
  */
 const BorderedContainer = (props: Props) => (
     <OuterContainer spacing={props.spacing} borderColor={props.borderColor} className={props.className}>
-        <InnerContainer spacing={props.spacing} innerColor={props.innerColor}>
+        <InnerContainer spacing={props.innerSpacing} innerColor={props.innerColor}>
             {props.children}
         </InnerContainer>
     </OuterContainer>
@@ -46,6 +48,7 @@ BorderedContainer.defaultProps = {
     borderColor: theme.color.darkBackground,
     innerColor: theme.color.white,
     spacing: theme.spacing.medium,
+    innerSpacing: theme.spacing.medium,
 };
 
 export default BorderedContainer;

@@ -10,6 +10,7 @@ import ThumbnailGallery from '../Common/ThumbnailGallery';
 import { GetRoomsForHouse } from '../../state/rooms';
 import BorderedContainer from '../Common/BorderedContainer';
 import HouseBanner from './HouseBanner';
+import HouseContent from './HouseContent';
 
 /**
  * The props accepted by the ViewHouse component.
@@ -59,6 +60,7 @@ const renderViewHouse = (data, isLoading, error) => {
     return (
         <Container>
             <HouseBanner house={data} />
+            <HouseContent house={data} />
             <ThumbnailGallery images={data.images} />
             <RoomList house={data} />
         </Container>
@@ -70,8 +72,10 @@ export default ViewHouse;
 /**
  * A container for the ViewHouse component that takes up the rest of the screen.
  */
-const Container = styled(BorderedContainer)`
-    min-height: calc(100% - 350px);
+const Container = styled(BorderedContainer).attrs({
+    innerSpacing: 0,
+})`
+    min-height: calc(100% - 270px);
     display: flex;
 `;
 

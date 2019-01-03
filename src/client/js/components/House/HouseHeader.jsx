@@ -92,7 +92,7 @@ export default HouseHeader;
  * A styled container div for the HouseHeader component.
  */
 const Container = styled.div`
-    height: 220px;
+    height: 190px;
     background: ${props => props.color};
     display: flex;
 
@@ -157,10 +157,10 @@ const HouseCardContainer = styled.div`
  * Sets the size of the card and provides a 10px border around the card.
  */
 const CardBorder = styled.div`
-    margin: 20px 10px;
+    margin: 10px;
     padding: 10px;
-    height: 160px;
-    width: 160px;
+    height: 150px;
+    width: 150px;
     background-color: ${props => props.color};
     cursor: pointer;
     flex-shrink: 0;
