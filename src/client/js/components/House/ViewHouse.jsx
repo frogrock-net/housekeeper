@@ -11,6 +11,7 @@ import { GetRoomsForHouse } from '../../state/rooms';
 import BorderedContainer from '../Common/BorderedContainer';
 import HouseBanner from './HouseBanner';
 import HouseContent from './HouseContent';
+import theme from '../../util/theme';
 
 /**
  * The props accepted by the ViewHouse component.
@@ -144,6 +145,9 @@ const renderRoomList = (data, isLoading, error) => {
         }
         return (
             <Fragment>
+                <RoomText>
+                    <div>Room list</div>
+                </RoomText>
                 {data.map((r, i) => (
                     <RoomOverview room={r} key={i} alternateColor={i % 2} />
                 ))}
@@ -153,6 +157,23 @@ const renderRoomList = (data, isLoading, error) => {
         return <div />;
     }
 };
+
+/**
+ * A component that indicates that there aren't any rooms.
+ */
+const RoomText = styled.div`
+    padding: 30px;
+
+    display: flex;
+    height: 50px;
+
+    align-items: center;
+    justify-content: center;
+
+    color: ${theme.font.darkerGrey};
+    font-size: 22px;
+    font-family: ${theme.font.header};
+`;
 
 /**
  * A component that indicates that there aren't any rooms.

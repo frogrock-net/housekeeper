@@ -13,13 +13,16 @@ import sample from './sample_banner.png';
 const HouseBanner = ({ house }) => {
     const color = house && house.banner ? house.banner.color || 'white' : 'white';
     // const image = house && house.banner && house.banner.image ? <BannerImage image={house.banner.image} /> : <PlaceholderHouse color={color} />;
-    const image = <BannerImage image={sample} />;
-
-    return (
-        <BannerContainer>
-            <BannerImageContainer color={color}>{image}</BannerImageContainer>
+    const image = (
+        <BannerImage image={sample}>
             <BannerName>{house.name}</BannerName>
             <BannerAddress address={house.address} />
+        </BannerImage>
+    );
+
+    return (
+        <BannerContainer color={color}>
+            <BannerImageContainer>{image}</BannerImageContainer>
         </BannerContainer>
     );
 };
@@ -57,21 +60,23 @@ const BannerAddress = ({ address }) => {
 /**
  * A styled container div for the Banner component.
  */
-const BannerContainer = styled.div``;
+const BannerContainer = styled.div`
+    background-color: ${props => props.color};
+`;
 
 /**
  * A styled div that formats the text used in the Banner component.
  */
 const BannerName = styled.div`
     padding: 10px;
-    color: #333;
+    color: #ccc;
 
     font-family: 'Arvo', sans-serif;
     font-weight: bold;
     font-size: 20px;
 
     text-align: center;
-    background-color: #eee;
+    background-color: rgba(0, 0, 0, 0.75);
 `;
 
 /**
@@ -165,14 +170,14 @@ const EditableBannerState = styled(FormInput)`
 
 const BannerLocation = styled.div`
     padding-bottom: 10px;
-    color: #666;
+    color: #aaa;
 
     font-family: 'Raleway', sans-serif;
     font-weight: bold;
     font-size: 17px;
 
     text-align: center;
-    background-color: #eee;
+    background-color: rgba(0, 0, 0, 0.75);
 `;
 
 /**
@@ -184,14 +189,17 @@ const BannerImage = styled.div`
     background: url(${props => props.image});
     background-position: center;
     background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 `;
 
 /**
  * A styled container div for the Banner component.
  */
 const BannerImageContainer = styled.div`
-    height: 225px;
-    background-color: ${props => props.color};
+    height: 275px;
 `;
 
 // -----------------------------------------------------------------------------
