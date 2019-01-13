@@ -9,7 +9,7 @@ import { BedIcon, ErrorIcon, HouseIcon } from '../Common/Icon';
 import ThumbnailGallery from '../Common/ThumbnailGallery';
 import { GetRoomsForHouse } from '../../state/rooms';
 import BorderedContainer from '../Common/BorderedContainer';
-import HouseBanner from './HouseBanner';
+import HouseBanner from './Banner/HouseBanner';
 import HouseContent from './HouseContent';
 import theme from '../../util/theme';
 

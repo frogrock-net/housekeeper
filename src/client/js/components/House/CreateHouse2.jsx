@@ -9,7 +9,7 @@ import theme from '../../util/theme';
 import Loading from '../Common/Loading';
 import { ErrorIcon } from '../Common/Icon';
 import Form, { FormDiv } from '../Common/Form/Form';
-import { EditableHouseBanner } from './HouseBanner';
+import { EditableHouseBanner } from './Banner/EditableHouseBanner';
 
 /**
  * A bare-bones, work-in-progress create house form.
@@ -26,10 +26,10 @@ export default CreateHouse2;
  * A styled container div for the CreateHouse component.
  */
 const Container = styled(BorderedContainer).attrs({
-    spacing: 0,
+    innerSpacing: 0,
 })`
-    min-height: calc(100% - 350px);
-    padding: 15px;
+    min-height: calc(100% - 270px);
+    display: flex;
 `;
 
 /**
@@ -92,7 +92,7 @@ const renderCreateHouse = (onSubmit, isLoading, error, data) => {
  */
 const StyledForm = styled(Form)`
     height: 100%;
-    padding: 15px;
+    padding: 0px;
 
     form {
         margin-top: 0px;
